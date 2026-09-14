@@ -24,9 +24,17 @@ interface QuickSplitWidgetProps {
   existingParticipants: string[];
   /** Nội dung các khoản đã ghi — gợi ý khi gõ, chọn thì điền sẵn danh mục */
   pastTitles: PastTitle[];
-  /** Người ứng tiền — luôn được tick sẵn paid khi lưu */
+  /** Người gửi tin trong bản xem trước. Không tự thêm vào danh sách chia. */
   payerName: string;
 }
+
+/**
+ * Người ghi sổ. Khi Định có trong danh sách chia, phần của Định được tick
+ * "đã trả" sẵn lúc lưu; người khác thì không (người dùng chọn, 15/9/2026).
+ */
+const OWNER_NAME = "Định";
+// Chuẩn hóa NFC: "Định" gõ từ bàn phím khác nhau có thể là dựng sẵn hoặc tổ hợp
+const isOwner = (name: string) => name.trim().normalize("NFC") === OWNER_NAME.normalize("NFC");
 
 const CATEGORIES: ActivityCategory[] = [
   "dining",
@@ -77,14 +85,14 @@ export default function QuickSplitWidget({
   const roster = useMemo(() => {
     const seen = new Set<string>();
     const out: string[] = [];
-    for (const n of [payerName, ...existingParticipants, ...extra]) {
+    for (const n of [...existingParticipants, ...extra]) {
       const name = n.trim();
       if (!name || seen.has(name)) continue;
       seen.add(name);
       out.push(name);
     }
     return out;
-  }, [payerName, existingParticipants, extra]);
+  }, [existingParticipants, extra]);
 
   const total = parseInt(amount || "0", 10) || 0;
   const count = picked.length;
@@ -166,7 +174,7 @@ export default function QuickSplitWidget({
 
   const buildParticipants = (): Participant[] =>
     picked.map((name) => {
-      const base: Participant = { name, paid: name === payerName };
+      const base: Participant = { name, paid: isOwner(name) };
       // Chỉ ghi shareAmount cho chế độ chia riêng — chia đều dùng amountPerPerson,
       // nhờ đó splitLabel() phân biệt được "chia đều" và "chia riêng".
       if (mode !== "equal") base.shareAmount = Math.round(shareFor(name));
@@ -277,30 +285,20 @@ export default function QuickSplitWidget({
           </div>
         </div>
 
-        {/* 3. Thời gian diễn ra */}
+        {/* 3. Thời gian diễn ra — mặc định lúc mở form; lịch có sẵn "Hôm nay" */}
         <div>
           <label htmlFor="split-when" className={label}>
             Thời gian diễn ra
           </label>
-          <div className="flex items-center gap-2">
-            <div className={cn(field, "flex-1 flex items-center gap-2 py-2.5")}>
-              <Clock aria-hidden className="w-4 h-4 text-ink-3 shrink-0" />
-              <input
-                id="split-when"
-                type="datetime-local"
-                value={when}
-                onChange={(e) => setWhen(e.target.value)}
-                className="flex-1 min-w-0 bg-transparent text-body tnum outline-none"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => setWhen(toLocalInput(new Date()))}
-              className="min-h-12 px-4 rounded-ctl border border-line-strong text-small font-medium
-                         text-ink hover:bg-wall-2 transition-colors"
-            >
-              Bây giờ
-            </button>
+          <div className={cn(field, "flex items-center gap-2 py-2.5")}>
+            <Clock aria-hidden className="w-4 h-4 text-ink-3 shrink-0" />
+            <input
+              id="split-when"
+              type="datetime-local"
+              value={when}
+              onChange={(e) => setWhen(e.target.value)}
+              className="flex-1 min-w-0 bg-transparent text-body tnum outline-none"
+            />
           </div>
         </div>
 
@@ -449,7 +447,9 @@ export default function QuickSplitWidget({
                     </span>
                     <span className={cn("truncate text-body", !on && "text-ink-2")}>
                       {name}
-                      {name === payerName && <span className="text-ink-3"> · ứng tiền</span>}
+                      {isOwner(name) && (
+                        <span className="text-small text-paid"> · tự tick đã trả</span>
+                      )}
                     </span>
                   </button>
 

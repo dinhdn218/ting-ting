@@ -35,7 +35,7 @@ Chức năng đã có (redesign phải giữ đủ, không thêm hay bớt tính
 - Chi tiết khoản: phần của từng người, tick đã trả (admin), xóa khoản có xác nhận (admin), trả phần của mình.
 - Chi tiết người: tổng còn nợ, từng khoản kèm trạng thái, tick đã trả tất cả (admin), trả ngay (chính mình).
 - Trả tiền: ảnh QR, ngân hàng, số tài khoản, chủ tài khoản, copy số tiền.
-- Ghi khoản mới: số tiền (nút +50K/+100K/+500K), nội dung, 6 danh mục, 3 cách chia, thêm người mới, dòng "còn lại chưa chia".
+- Ghi khoản mới: số tiền (nút +50K/+100K/+500K), nội dung (gợi ý từ khoản cũ), thời gian diễn ra, 6 danh mục, 3 cách chia, tìm/thêm người, dòng "còn lại chưa chia". Người ứng tiền không tự được thêm vào danh sách chia. Khi Định (người ghi sổ) có trong danh sách chia, phần của Định được tick "đã trả" sẵn lúc lưu; người khác thì không (người dùng chọn, 15/9/2026).
 - Quản trị: PIN được hash, tự nâng cấp PIN plaintext cũ, lần đầu tạo admin; quản lý QR; xuất Excel / CSV / JSON (chỉ khoản chưa trả).
 - Sáng / tối, lưu trên máy.
 
