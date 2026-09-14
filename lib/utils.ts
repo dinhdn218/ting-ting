@@ -21,6 +21,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/** Bỏ dấu tiếng Việt + chữ thường — để "huyen" tìm ra "Chị Huyền". */
+export function foldVi(s: string): string {
+  return s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+}
+
 /**
  * The amount a single participant owes for an activity.
  * Honours per-person `shareAmount` (set by percentage/exact splits) and

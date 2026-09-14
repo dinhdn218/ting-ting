@@ -23,7 +23,7 @@ const PHASE_STYLE: Record<GroupPhase, string> = {
 
 /**
  * "Thông tin nhóm": tình hình cả nhóm, ai còn nợ, ai đã xong, chi theo danh mục.
- * Danh sách xếp theo tên (bạn lên đầu) — sổ ghi chép, không phải bảng xếp hạng.
+ * "Còn nợ" xếp người nợ nhiều lên trước để thấy việc cần thu; không huy chương.
  */
 export default function MembersPanel({
   ledger,

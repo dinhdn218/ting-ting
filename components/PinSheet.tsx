@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Delete } from "lucide-react";
 import SheetShell from "@/components/SheetShell";
 import { cn } from "@/lib/utils";
@@ -19,7 +19,10 @@ interface PinSheetProps {
 
 const LEN = 6;
 
-/** PIN là cửa vào chế độ ghi, không phải cổng chặn. */
+/**
+ * PIN là cửa vào chế độ ghi, không phải cổng chặn.
+ * Nhập bằng bàn phím số trên màn hình hoặc gõ phím 0–9 / Backspace / Delete.
+ */
 export default function PinSheet({
   open,
   onClose,
@@ -32,20 +35,67 @@ export default function PinSheet({
   const [error, setError] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const press = async (digit: string) => {
-    if (busy || pin.length >= LEN) return;
-    const next = pin + digit;
-    setError(false);
-    setPin(next);
+  // Giá trị hiện tại nằm trong ref: nhiều phím gõ liên tiếp trước khi React
+  // render lại vẫn nối đúng vào nhau (state trong closure sẽ bị cũ).
+  const pinRef = useRef("");
+  const busyRef = useRef(false);
 
-    if (next.length === LEN) {
-      setBusy(true);
-      const ok = await onSubmit(next);
-      setBusy(false);
-      setPin("");
-      if (!ok) setError(true);
-    }
+  const setPinValue = (value: string) => {
+    pinRef.current = value;
+    setPin(value);
   };
+
+  const submit = async (value: string) => {
+    busyRef.current = true;
+    setBusy(true);
+    const ok = await onSubmit(value);
+    busyRef.current = false;
+    setBusy(false);
+    setPinValue("");
+    if (!ok) setError(true);
+  };
+
+  const press = (digit: string) => {
+    if (busyRef.current || pinRef.current.length >= LEN) return;
+    const next = pinRef.current + digit;
+    setError(false);
+    setPinValue(next);
+    if (next.length === LEN) void submit(next);
+  };
+
+  const backspace = () => {
+    if (busyRef.current) return;
+    setPinValue(pinRef.current.slice(0, -1));
+    setError(false);
+  };
+
+  const clear = () => {
+    if (busyRef.current) return;
+    setPinValue("");
+    setError(false);
+  };
+
+  // Bàn phím vật lý: 0–9, Backspace, Delete. Bỏ qua khi đang gõ trong ô tên.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (/^[0-9]$/.test(e.key)) {
+        e.preventDefault();
+        press(e.key);
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        backspace();
+      } else if (e.key === "Delete") {
+        e.preventDefault();
+        clear();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
 
   const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
@@ -116,10 +166,7 @@ export default function PinSheet({
           ))}
           <button
             type="button"
-            onClick={() => {
-              setPin("");
-              setError(false);
-            }}
+            onClick={clear}
             aria-label="Xóa hết"
             className={cn(keyClass, "text-body font-semibold text-ink-2")}
           >
@@ -130,16 +177,17 @@ export default function PinSheet({
           </button>
           <button
             type="button"
-            onClick={() => {
-              setPin((p) => p.slice(0, -1));
-              setError(false);
-            }}
+            onClick={backspace}
             aria-label="Xóa một số"
             className={cn(keyClass, "grid place-items-center")}
           >
             <Delete aria-hidden className="w-6 h-6" strokeWidth={1.75} />
           </button>
         </div>
+
+        <p className="text-small text-ink-3 text-center mt-3">
+          Có thể gõ số trực tiếp từ bàn phím.
+        </p>
       </div>
     </SheetShell>
   );

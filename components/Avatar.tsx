@@ -50,7 +50,7 @@ export default function Avatar({
 export function AvatarStack({ names }: { names: string[] }) {
   const shown = names.slice(0, 2);
   if (shown.length < 2) {
-    return <Avatar name={shown[0] ?? "SC"} size="md" tone="payer" />;
+    return <Avatar name={shown[0] ?? "TT"} size="md" tone="payer" />;
   }
   // Hai chữ tắt 26px trong ô 44px: chồng nhau đúng 8px ở góc, không nhãn nào bị che
   return (

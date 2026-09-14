@@ -66,12 +66,12 @@ export default function ChatHeader({
           type="button"
           onClick={() => onTab("members")}
           className="flex items-center gap-3 min-w-0 flex-1 text-left rounded-ctl"
-          aria-label={`Sổ Chung, ${memberCount} người, ${unsettled} người còn nợ. Xem thành viên`}
+          aria-label={`Ting Ting, ${memberCount} người, ${unsettled} người còn nợ. Xem thành viên`}
         >
           <AvatarStack names={names} />
           <span className="min-w-0">
             <span className="block text-row font-semibold leading-tight truncate">
-              Sổ Chung
+              Ting Ting
             </span>
             <span className="flex items-center gap-1.5 text-small text-ink-2 truncate mt-0.5">
               <span

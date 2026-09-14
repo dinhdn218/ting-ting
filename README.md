@@ -1,4 +1,4 @@
-# 💰 Chia Tiền Nhóm - Group Expense Tracker
+# Ting Ting — sổ chi tiêu chung của nhóm
 
 <div align="center">
 

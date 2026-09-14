@@ -1,13 +1,6 @@
 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="brand" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#4f46e5"/>
-      <stop offset="1" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="16" fill="url(#brand)"/>
-  <g transform="translate(8,8) scale(2)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
-    <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
-  </g>
+  <!-- Ting Ting · "Tin nhắn nhóm": nền vàng tin ghim, bong bóng mực, ✓ đã trả -->
+  <rect width="64" height="64" rx="16" fill="#FFD84D"/>
+  <path d="M23 14h18a11 11 0 0 1 11 11v8a11 11 0 0 1-11 11H29l-9 7v-7.6A11 11 0 0 1 12 33v-8a11 11 0 0 1 11-11z" fill="#1B1D23"/>
+  <path d="M23.5 29.5l5.5 5.5 11.5-11.5" stroke="#FFD84D" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

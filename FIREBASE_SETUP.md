@@ -11,7 +11,7 @@
 ## Bước 2: Tạo Web App
 
 1. Trong Firebase Console, click vào icon **Web** (`</>`)
-2. Đặt tên app: `Chia Tiền Nhóm`
+2. Đặt tên app: `Ting Ting`
 3. **KHÔNG** chọn Firebase Hosting
 4. Click **"Register app"**
 5. Copy toàn bộ config object

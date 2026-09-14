@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-09-15T12:00:00Z",
-  "title": "Design System: Sổ Chung",
+  "title": "Design System: Ting Ting",
   "extensions": {
     "colorMeta": {
       "mine": { "role": "primary", "displayName": "Group-Chat Ink", "canonical": "oklch(0.215 0.012 260)", "dark": "oklch(0.93 0.006 250)", "tonalRamp": ["oklch(0.15 0.012 260)", "oklch(0.26 0.012 260)", "oklch(0.37 0.012 260)", "oklch(0.48 0.012 260)", "oklch(0.6 0.012 260)", "oklch(0.72 0.012 260)", "oklch(0.84 0.012 260)", "oklch(0.95 0.012 260)"] },
@@ -137,7 +137,7 @@
   ],
   "narrative": {
     "northStar": "The Group Chat That Keeps the Math",
-    "overview": "Sổ Chung is the group's own chat thread, one that happens to keep the books. Every expense is a bill message sent by the person who fronted the money, and whoever has paid shows up as a ✓ in a row of initials, the way read receipts do in a messenger. The wallpaper is a cool grey, other people's messages are white bubbles, your own are solid ink, and the one thing that is about you right now, your number, is pinned in flat yellow above the thread.\n\nThe system is dense and operational, built for a thirty-second visit on a phone: one typeface with hierarchy carried by size and weight, tabular figures wherever money appears, lucide line icons, and color spent almost entirely on meaning (ink is you, yellow is your pin, brick red is still owed, leaf green is paid). Surfaces are flat tonal layers; the only depth is a hair of contact shadow under bubbles and the lift of a sheet.\n\nIt rejects the fintech balance card and the generic list-of-rows genre, and it fully replaces the earlier paper-ledger look of receipt paper and stamps. Nothing is ranked, decorated or celebrated. Motion exists only to report that a number or a status just changed.",
+    "overview": "Ting Ting is the group's own chat thread, one that happens to keep the books. Every expense is a bill message sent by the person who fronted the money, and whoever has paid shows up as a ✓ in a row of initials, the way read receipts do in a messenger. The wallpaper is a cool grey, other people's messages are white bubbles, your own are solid ink, and the one thing that is about you right now, your number, is pinned in flat yellow above the thread.\n\nThe system is dense and operational, built for a thirty-second visit on a phone: one typeface with hierarchy carried by size and weight, tabular figures wherever money appears, lucide line icons, and color spent almost entirely on meaning (ink is you, yellow is your pin, brick red is still owed, leaf green is paid). Surfaces are flat tonal layers; the only depth is a hair of contact shadow under bubbles and the lift of a sheet.\n\nIt rejects the fintech balance card and the generic list-of-rows genre, and it fully replaces the earlier paper-ledger look of receipt paper and stamps. Nothing is decorated or celebrated; the only ordering by amount is Còn nợ, largest first, to show what still needs collecting. Motion exists only to report that a number or a status just changed.",
     "keyCharacteristics": [
       "Chat-thread grammar: date chips, bill bubbles with a sender-side tail corner, a monthly summary posted as a system message, a docked composer.",
       "Cool grey wallpaper, white bubbles for others, ink bubbles for you, one flat yellow pin.",
@@ -159,7 +159,7 @@
       { "name": "The Tail Corner Rule", "body": "A bill bubble has one 6px corner, bottom and on the sender's side (bottom-left for others, bottom-right for you); its other corners are 18px. No other component gets an asymmetric corner.", "section": "shapes" },
       { "name": "The Dashed Means Not-Yet Rule", "body": "A 1px dashed outline means \"not yet\": unpaid initials, the \"Chưa trả\" mark, the empty QR slot. Never use dashes as decoration.", "section": "shapes" },
       { "name": "The Fixed Label Grid Rule", "body": "Every bill bubble fills the same slots in the same order: category tile · title with category and split · total; a hairline; initials with ✓ badges · progress · time; then \"Phần của bạn\" when you take part. Add information by filling a slot, never by adding a new layout.", "section": "components" },
-      { "name": "The Ledger-Not-Leaderboard Rule", "body": "Members are grouped by state (Còn nợ, Đã trả xong, Người ứng tiền) and sorted by name with you first. Never sort by amount, badge the biggest debtor, or add medals and streaks.", "section": "components" },
+      { "name": "The Ledger-Not-Leaderboard Rule", "body": "Members are grouped by state (Còn nợ, Đã trả xong, Người ứng tiền). Còn nợ is sorted by amount owed, largest first, so the biggest collection is visible at once (the user's call, 15/9/2026); ties fall back to name. Never badge the biggest debtor, number the rows, or add medals and streaks.", "section": "components" },
       { "name": "The One Overlay Rule", "body": "Every detail opens in `SheetShell`: a bottom sheet on mobile, a 440px right side sheet at ≥1024px. `AlertDialog` is only for confirming a destructive or bulk action.", "section": "components" },
       { "name": "The State-Only Motion Rule", "body": "Two animations exist: the digit roll (420ms, cubic-bezier(0.3, 1.25, 0.5, 1), overshooting by one step and settling) on headline amounts when realtime data changes, and the tick pop (220ms, scale 0.4 → 1.18 → 1) on a ✓ badge that just turned paid. Progress widths ease over 500ms and hovers take 150ms. Nothing enters, fades or loops for decoration; `prefers-reduced-motion` collapses all of it and `Money` renders static text.", "section": "components" }
     ],
@@ -177,7 +177,7 @@
       "**Don't** add a second typeface, a display face or a system display font; hierarchy is size and weight.",
       "**Don't** put eyebrow or kicker labels above headings; a heading stands alone and a count follows a middot (\"Còn nợ · 9\").",
       "**Don't** build a hero-metric block or a fintech balance card; your number lives in the pinned bar and in sheets.",
-      "**Don't** rank, medal or spotlight members by how much they owe.",
+      "**Don't** medal, number or spotlight debtors. Ordering Còn nợ by amount owed is the only ranking the system allows.",
       "**Don't** use emoji or text glyphs as icons.",
       "**Don't** use yellow for anything that is not the pin or \"me\", or ink for anything that is not yours or the primary action.",
       "**Don't** use a multi-hue categorical palette, or color a label with its bar's color.",

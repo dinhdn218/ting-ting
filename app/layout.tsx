@@ -10,7 +10,7 @@ const beVietnam = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Sổ Chung — sổ chi tiêu của nhóm",
+  title: "Ting Ting — Sổ chi tiêu của nhóm",
   description:
     "Sổ chi tiêu chung của nhóm. Xem ai còn nợ bao nhiêu và trả cho ai, không cần đăng nhập.",
   manifest: "/manifest.webmanifest",

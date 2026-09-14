@@ -51,7 +51,7 @@ export default function FilterBar({
 
   return (
     <div className="flex-none border-b border-line bg-panel">
-      <div className="mx-auto w-full max-w-[720px] px-3 sm:px-4 py-3 space-y-2.5">
+      <div className="mx-auto w-full max-w-[720px] lg:max-w-[1280px] px-3 sm:px-4 lg:px-6 py-3 space-y-2.5">
         <div className="flex items-center gap-2">
           <label className="flex-1 flex items-center gap-2 min-h-11 pl-3.5 pr-1 rounded-full bg-wall-2
                             focus-within:ring-2 focus-within:ring-ink">

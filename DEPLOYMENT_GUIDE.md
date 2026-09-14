@@ -2,7 +2,7 @@
 
 ## 📋 TỔNG QUAN
 
-Ứng dụng **Chia Tiền Nhóm** đã sẵn sàng để triển khai lên production. Dưới đây là các bước chi tiết để deploy.
+Ứng dụng **Ting Ting** đã sẵn sàng để triển khai lên production. Dưới đây là các bước chi tiết để deploy.
 
 ---
 
@@ -396,8 +396,8 @@ export default config;
 
 ```json
 {
-  "name": "Chia Tiền Nhóm",
-  "short_name": "Tip Me",
+  "name": "Ting Ting",
+  "short_name": "Ting Ting",
   "description": "Quản lý chi phí nhóm thông minh",
   "start_url": "/",
   "display": "standalone",

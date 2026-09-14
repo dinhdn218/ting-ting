@@ -22,7 +22,11 @@ interface ThreadProps {
   nowKey: string;
 }
 
-/** Luồng trò chuyện: cũ ở trên, mới ở dưới; nhãn ngày và tin tổng kết tháng xen giữa. */
+/**
+ * Luồng trò chuyện: cũ ở trên, mới ở dưới. Khoản chi luôn ở bên trái (tin
+ * người ứng tiền gửi), tổng kết tháng ở bên phải như tin trả lời của app.
+ * Desktop: hai cột — khoản chi trái, tổng kết dính ở cột phải khi cuộn qua tháng đó.
+ */
 export default function Thread({
   months,
   me,
@@ -54,48 +58,67 @@ export default function Thread({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[720px] px-3 sm:px-4 pt-4 pb-6 space-y-3">
+    <div className="mx-auto w-full max-w-[720px] lg:max-w-[1280px] px-3 sm:px-4 lg:px-6 pt-4 pb-6 space-y-6">
       {months.map((m) => (
-        <Fragment key={m.key}>
-          {m.days.map((d) => (
-            <Fragment key={d.key}>
-              <div className="flex justify-center pt-2">
-                <span className="px-3 py-1 rounded-full bg-wall-2 text-meta font-medium text-ink-2">
-                  {d.label}
-                </span>
-              </div>
-              {d.rows.map((r, i) => (
-                <BillBubble
-                  key={r.activity.id}
-                  activity={r.activity}
-                  me={me}
-                  payerName={payerName}
-                  onOpen={() => onOpen(r.activity)}
-                  showSender={i === 0}
-                />
-              ))}
-            </Fragment>
-          ))}
+        <section
+          key={m.key}
+          aria-label={m.label}
+          className={cn(
+            !filtered &&
+              "lg:grid lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px] lg:gap-6 lg:items-start",
+          )}
+        >
+          <div className="min-w-0 space-y-3">
+            {m.days.map((d) => (
+              <Fragment key={d.key}>
+                <div className="flex justify-center pt-2">
+                  <span className="px-3 py-1 rounded-full bg-wall-2 text-meta font-medium text-ink-2">
+                    {d.label}
+                  </span>
+                </div>
+                {d.rows.map((r, i) => (
+                  <BillBubble
+                    key={r.activity.id}
+                    activity={r.activity}
+                    me={me}
+                    payerName={payerName}
+                    onOpen={() => onOpen(r.activity)}
+                    showSender={i === 0}
+                  />
+                ))}
+              </Fragment>
+            ))}
+          </div>
 
-          {!filtered && <MonthSummary month={m} current={m.key === nowKey} />}
-        </Fragment>
+          {!filtered && (
+            <div className="mt-3 flex justify-end lg:mt-2 lg:block lg:sticky lg:top-4">
+              <MonthSummary month={m} current={m.key === nowKey} />
+            </div>
+          )}
+        </section>
       ))}
     </div>
   );
 }
 
-/** Tin hệ thống của "Sổ Chung": tổng kết tháng theo danh mục. */
-function MonthSummary({ month, current }: { month: ThreadMonth; current: boolean }) {
+/** Tin hệ thống của "Ting Ting": tổng kết tháng theo danh mục — nằm bên phải. */
+function MonthSummary({
+  month,
+  current,
+}: {
+  month: ThreadMonth;
+  current: boolean;
+}) {
   return (
     <section
       aria-label={`Tổng kết tháng ${month.month}`}
-      className="mx-auto w-full max-w-[520px] rounded-bubble bg-panel px-4 pt-3.5 pb-4 mt-2"
+      className="w-full max-w-[88%] lg:max-w-none bubble-out bg-panel shadow-bubble px-4 pt-3.5 pb-4"
     >
       <h3 className="flex items-center gap-1.5 text-body font-semibold">
-        <BookOpen aria-hidden className="w-4 h-4 text-ink-3" />
+        <BookOpen aria-hidden className="w-4 h-4 text-ink-3 shrink-0" />
         {current
-          ? `Sổ Chung · tháng ${month.month} đến hôm nay`
-          : `Sổ Chung · tổng kết tháng ${month.month}/${month.year}`}
+          ? `Ting Ting · tháng ${month.month} đến hôm nay`
+          : `Ting Ting · tổng kết tháng ${month.month}/${month.year}`}
       </h3>
       <p className="text-small text-ink-2 tnum mt-0.5">
         {month.count} khoản · {money(month.sum)}

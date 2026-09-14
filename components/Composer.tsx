@@ -19,7 +19,7 @@ interface ComposerProps {
 export default function Composer({ kind, label, onClick }: ComposerProps) {
   return (
     <div className="flex-none border-t border-line bg-panel px-3 sm:px-4 pt-2.5 pb-safe no-print">
-      <div className="mx-auto w-full max-w-[720px]">
+      <div className="mx-auto w-full max-w-[720px] lg:max-w-[1280px]">
         {kind === "compose" ? (
           <button
             type="button"

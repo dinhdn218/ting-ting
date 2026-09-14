@@ -29,8 +29,9 @@ import ActivitySheet from "@/components/ActivitySheet";
 import PaySheet from "@/components/PaySheet";
 import PersonSheet from "@/components/PersonSheet";
 import PinSheet from "@/components/PinSheet";
+import WhoSheet from "@/components/WhoSheet";
 import NotebookMenu from "@/components/NotebookMenu";
-import QuickSplitWidget from "@/components/QuickSplitWidget";
+import QuickSplitWidget, { type PastTitle } from "@/components/QuickSplitWidget";
 
 type Sheet =
   | null
@@ -39,6 +40,7 @@ type Sheet =
   | { kind: "person"; name: string }
   | { kind: "split" }
   | { kind: "pin" }
+  | { kind: "who" }
   | { kind: "menu" };
 
 export default function Home() {
@@ -133,10 +135,24 @@ export default function Home() {
     return Array.from(s).sort();
   }, [activities]);
 
-  // Ảnh nhóm: người ứng tiền và chính bạn — không bao giờ là người nợ nhiều nhất
+  // Gợi ý "Nội dung" khi ghi khoản: nội dung đã dùng, mới nhất trước
+  const pastTitles = useMemo(() => {
+    const seen = new Set<string>();
+    const out: PastTitle[] = [];
+    const recent = activities.slice().sort((a, b) => (a.date < b.date ? 1 : -1));
+    for (const a of recent) {
+      const title = a.title.trim();
+      if (!title || seen.has(title)) continue;
+      seen.add(title);
+      out.push({ title, category: a.category });
+      if (out.length >= 40) break;
+    }
+    return out;
+  }, [activities]);
+
+  // Ảnh nhóm: người ứng tiền và chính bạn — ô vàng chỉ dành cho bạn
   const headerNames = useMemo(() => {
-    // Ô vàng chỉ dành cho chính bạn: chưa chọn tên thì chỉ hiện người ứng tiền
-    const names = [payerName || "Sổ Chung"];
+    const names = [payerName || "Ting Ting"];
     if (me && me !== payerName) names.push(me);
     return names;
   }, [payerName, me]);
@@ -347,7 +363,7 @@ export default function Home() {
         onTab={setTab}
       />
 
-      <div className="flex-1 min-h-0 lg:grid lg:grid-cols-[380px_minmax(0,1fr)] xl:grid-cols-[420px_minmax(0,1fr)]">
+      <div className="flex-1 min-h-0 lg:grid lg:grid-cols-[380px_minmax(0,1fr)]">
         {/* Thành viên — tab ở mobile, cột trái ở desktop */}
         <aside
           aria-label="Thành viên"
@@ -379,6 +395,7 @@ export default function Home() {
               me={me}
               payerName={payerName}
               onPickMe={pickMe}
+              onOpenWho={() => setSheet({ kind: "who" })}
               onPay={() => setSheet({ kind: "pay" })}
               onOpenMe={() => me && setSheet({ kind: "person", name: me })}
               onOpenMembers={() => setTab("members")}
@@ -454,12 +471,23 @@ export default function Home() {
         isPayer={sheet?.kind === "person" && sheet.name === payerName}
       />
 
+      <WhoSheet
+        key={sheet?.kind === "who" ? "who-open" : "who-closed"}
+        open={sheet?.kind === "who"}
+        onClose={() => setSheet(null)}
+        roster={ledger.roster}
+        me={me}
+        onPick={pickMe}
+        onClear={clearMe}
+      />
+
       <QuickSplitWidget
         key={sheet?.kind === "split" ? "split-open" : "split-closed"}
         open={sheet?.kind === "split"}
         onClose={() => setSheet(null)}
         onAdd={addActivity}
         existingParticipants={roster}
+        pastTitles={pastTitles}
         payerName={payerName}
       />
 

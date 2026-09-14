@@ -1,22 +1,29 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, SendHorizontal, UserPlus } from "lucide-react";
+import { Check, Clock, Search, SendHorizontal, UserPlus, X } from "lucide-react";
 import type { Activity, ActivityCategory, Participant } from "@/types";
 import { money, plain } from "@/lib/ledgerSelectors";
-import { cn } from "@/lib/utils";
+import { cn, foldVi } from "@/lib/utils";
 import { btnPrimary, field } from "@/lib/styles";
-import { iconOf, labelOf } from "@/components/CategoryMark";
+import { CategoryIcon, labelOf } from "@/components/CategoryMark";
 import SheetShell from "@/components/SheetShell";
 import BillBubble from "@/components/BillBubble";
 
 type SplitMode = "equal" | "percentage" | "exact";
+
+export interface PastTitle {
+  title: string;
+  category?: ActivityCategory;
+}
 
 interface QuickSplitWidgetProps {
   open: boolean;
   onClose: () => void;
   onAdd: (activity: Activity) => void;
   existingParticipants: string[];
+  /** Nội dung các khoản đã ghi — gợi ý khi gõ, chọn thì điền sẵn danh mục */
+  pastTitles: PastTitle[];
   /** Người ứng tiền — luôn được tick sẵn paid khi lưu */
   payerName: string;
 }
@@ -38,6 +45,12 @@ const MODES: [SplitMode, string][] = [
   ["exact", "Số tiền"],
 ];
 
+/** "2026-09-15T21:30" theo giờ máy — giá trị của <input type="datetime-local"> */
+function toLocalInput(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
 /**
  * Soạn một tin hóa đơn. Thứ tự nhập theo cách người ta nói:
  * "một triệu hai bốn, lẩu, năm người". Cuối sheet là bản xem trước ĐÚNG
@@ -48,17 +61,18 @@ export default function QuickSplitWidget({
   onClose,
   onAdd,
   existingParticipants,
+  pastTitles,
   payerName,
 }: QuickSplitWidgetProps) {
   const [amount, setAmount] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<ActivityCategory>("dining");
+  const [when, setWhen] = useState(() => toLocalInput(new Date()));
   const [mode, setMode] = useState<SplitMode>("equal");
   const [picked, setPicked] = useState<string[]>([]);
   const [shares, setShares] = useState<Record<string, string>>({});
-  const [newName, setNewName] = useState("");
+  const [query, setQuery] = useState("");
   const [extra, setExtra] = useState<string[]>([]);
-  const [draftDate] = useState(() => new Date().toISOString());
 
   const roster = useMemo(() => {
     const seen = new Set<string>();
@@ -74,6 +88,15 @@ export default function QuickSplitWidget({
 
   const total = parseInt(amount || "0", 10) || 0;
   const count = picked.length;
+
+  const whenDate = new Date(when);
+  const whenValid = !Number.isNaN(whenDate.getTime());
+  const whenIso = whenValid ? whenDate.toISOString() : new Date().toISOString();
+
+  /* ---- tìm người tham gia (không dấu) ------------------------------------ */
+  const q = foldVi(query.trim());
+  const shown = q ? roster.filter((n) => foldVi(n).includes(q)) : roster;
+  const exact = !!q && roster.some((n) => foldVi(n) === q);
 
   /** Phần tiền của từng người theo chế độ đang chọn. */
   const shareFor = (name: string): number => {
@@ -93,13 +116,15 @@ export default function QuickSplitWidget({
       ? "Nhập số tiền"
       : title.trim() === ""
         ? "Nhập nội dung khoản chi"
-        : count < 1
-          ? "Chọn ít nhất một người"
-          : mode !== "equal" && !balanced
-            ? remainder > 0
-              ? `Còn ${money(remainder)} chưa chia`
-              : `Đang chia dư ${money(-remainder)}`
-            : null;
+        : !whenValid
+          ? "Chọn thời gian diễn ra"
+          : count < 1
+            ? "Chọn ít nhất một người"
+            : mode !== "equal" && !balanced
+              ? remainder > 0
+                ? `Còn ${money(remainder)} chưa chia`
+                : `Đang chia dư ${money(-remainder)}`
+              : null;
   const canSave = blocker === null;
 
   const toggle = (name: string) =>
@@ -107,15 +132,36 @@ export default function QuickSplitWidget({
       prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name],
     );
 
-  const addPerson = () => {
-    const name = newName.trim();
-    if (!name || roster.includes(name)) {
-      setNewName("");
-      return;
+  const pick = (name: string) =>
+    setPicked((prev) => (prev.includes(name) ? prev : [...prev, name]));
+
+  const addPerson = (raw: string) => {
+    const name = raw.trim();
+    if (!name) return;
+    const existing = roster.find((n) => foldVi(n) === foldVi(name));
+    if (existing) {
+      pick(existing);
+    } else {
+      setExtra((prev) => [...prev, name]);
+      pick(name);
     }
-    setExtra((prev) => [...prev, name]);
-    setPicked((prev) => [...prev, name]);
-    setNewName("");
+    setQuery("");
+  };
+
+  const onQueryEnter = () => {
+    if (!q) return;
+    if (shown.length === 1) {
+      pick(shown[0]);
+      setQuery("");
+    } else if (!exact) {
+      addPerson(query);
+    }
+  };
+
+  const onTitleChange = (value: string) => {
+    setTitle(value);
+    const hit = pastTitles.find((t) => t.title === value);
+    if (hit?.category) setCategory(hit.category);
   };
 
   const buildParticipants = (): Participant[] =>
@@ -132,19 +178,14 @@ export default function QuickSplitWidget({
     title: title.trim() || "Nội dung khoản chi",
     totalAmount: total,
     amountPerPerson: count ? Math.round(total / count) : 0,
-    date: draftDate,
+    date: whenIso,
     category,
     participants: buildParticipants(),
   };
 
   const save = () => {
     if (!canSave) return;
-    onAdd({
-      ...preview,
-      id: Date.now().toString(),
-      title: title.trim(),
-      date: new Date().toISOString(),
-    });
+    onAdd({ ...preview, id: Date.now().toString(), title: title.trim() });
     onClose();
   };
 
@@ -212,7 +253,7 @@ export default function QuickSplitWidget({
           </div>
         </div>
 
-        {/* 2. Nội dung */}
+        {/* 2. Nội dung — gợi ý từ các khoản đã ghi */}
         <div>
           <label htmlFor="split-title" className={label}>
             Nội dung
@@ -221,20 +262,53 @@ export default function QuickSplitWidget({
             <input
               id="split-title"
               type="text"
+              list="split-title-suggest"
+              autoComplete="off"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => onTitleChange(e.target.value)}
               placeholder="Lẩu Kỳ Đồng"
               className="w-full bg-transparent text-row outline-none"
             />
+            <datalist id="split-title-suggest">
+              {pastTitles.map((t) => (
+                <option key={t.title} value={t.title} />
+              ))}
+            </datalist>
           </div>
         </div>
 
-        {/* 3. Danh mục */}
+        {/* 3. Thời gian diễn ra */}
+        <div>
+          <label htmlFor="split-when" className={label}>
+            Thời gian diễn ra
+          </label>
+          <div className="flex items-center gap-2">
+            <div className={cn(field, "flex-1 flex items-center gap-2 py-2.5")}>
+              <Clock aria-hidden className="w-4 h-4 text-ink-3 shrink-0" />
+              <input
+                id="split-when"
+                type="datetime-local"
+                value={when}
+                onChange={(e) => setWhen(e.target.value)}
+                className="flex-1 min-w-0 bg-transparent text-body tnum outline-none"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setWhen(toLocalInput(new Date()))}
+              className="min-h-12 px-4 rounded-ctl border border-line-strong text-small font-medium
+                         text-ink hover:bg-wall-2 transition-colors"
+            >
+              Bây giờ
+            </button>
+          </div>
+        </div>
+
+        {/* 4. Danh mục — 2 hàng × 3 */}
         <fieldset>
           <legend className={label}>Danh mục</legend>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {CATEGORIES.map((c) => {
-              const Icon = iconOf(c);
               const on = category === c;
               return (
                 <button
@@ -243,13 +317,14 @@ export default function QuickSplitWidget({
                   onClick={() => setCategory(c)}
                   aria-pressed={on}
                   className={cn(
-                    "flex flex-col items-center justify-center gap-1 min-h-16 rounded-ctl border text-meta font-medium transition-colors",
+                    "flex items-center justify-center gap-2 min-h-12 px-2 rounded-ctl border",
+                    "text-small font-medium whitespace-nowrap transition-colors",
                     on
                       ? "bg-mine text-on-mine border-mine"
                       : "bg-bubble text-ink-2 border-line hover:border-line-strong hover:text-ink",
                   )}
                 >
-                  <Icon aria-hidden className="w-5 h-5" strokeWidth={1.75} />
+                  <CategoryIcon category={c} className="w-[18px] h-[18px] shrink-0" />
                   {labelOf(c)}
                 </button>
               );
@@ -257,7 +332,7 @@ export default function QuickSplitWidget({
           </div>
         </fieldset>
 
-        {/* 4. Chia cho */}
+        {/* 5. Chia cho */}
         <div>
           <div className="flex items-center justify-between gap-3 mb-1.5">
             <span className="text-small font-medium text-ink-2 tnum">Chia cho {count} người</span>
@@ -288,8 +363,68 @@ export default function QuickSplitWidget({
             ))}
           </div>
 
-          <ul className="mt-2">
-            {roster.map((name) => {
+          {/* Đã chọn — luôn thấy, kể cả khi danh sách đang lọc */}
+          {picked.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-3" aria-label="Người đã chọn">
+              {picked.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => toggle(name)}
+                  aria-label={`Bỏ ${name}`}
+                  className="inline-flex items-center gap-1 min-h-9 pl-3 pr-2 rounded-full bg-mine
+                             text-on-mine text-small font-medium hover:opacity-90"
+                >
+                  {name}
+                  <X aria-hidden className="w-3.5 h-3.5 text-on-mine-2" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Tìm hoặc thêm người */}
+          <div className={cn(field, "mt-3 py-2 flex items-center gap-2")}>
+            <Search aria-hidden className="w-4 h-4 text-ink-3 shrink-0" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  onQueryEnter();
+                }
+              }}
+              placeholder={`Tìm hoặc thêm người · ${roster.length} trong sổ`}
+              aria-label="Tìm hoặc thêm người tham gia"
+              className="flex-1 min-w-0 bg-transparent text-body outline-none"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Xóa chữ tìm"
+                className="min-h-0 w-8 h-8 grid place-items-center rounded-full text-ink-3 hover:text-ink"
+              >
+                <X aria-hidden className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          <ul className="mt-1">
+            {q && !exact && (
+              <li className="border-b border-line">
+                <button
+                  type="button"
+                  onClick={() => addPerson(query)}
+                  className="w-full flex items-center gap-3 min-h-12 text-left text-body font-medium"
+                >
+                  <UserPlus aria-hidden className="w-5 h-5 text-ink-2" />
+                  Thêm “{query.trim()}” vào khoản này
+                </button>
+              </li>
+            )}
+            {shown.map((name) => {
               const on = picked.includes(name);
               return (
                 <li
@@ -346,34 +481,9 @@ export default function QuickSplitWidget({
               );
             })}
           </ul>
-
-          <div className="flex items-center gap-2 pt-3">
-            <div className={cn(field, "flex-1 py-2 flex items-center gap-2")}>
-              <UserPlus aria-hidden className="w-4 h-4 text-ink-3 shrink-0" />
-              <input
-                type="text"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addPerson();
-                  }
-                }}
-                placeholder="Thêm người khác…"
-                aria-label="Thêm người vào khoản này"
-                className="flex-1 min-w-0 bg-transparent text-body outline-none"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={addPerson}
-              className="min-h-12 px-4 rounded-ctl border border-line-strong text-body font-medium
-                         text-ink hover:bg-wall-2 transition-colors"
-            >
-              Thêm
-            </button>
-          </div>
+          {q && shown.length === 0 && exact === false && (
+            <p className="text-small text-ink-3 mt-2">Chưa có ai tên này trong sổ — Enter để thêm.</p>
+          )}
 
           {mode !== "equal" && (
             <div className="mt-4 pt-3.5 border-t-2 border-line-strong flex items-baseline justify-between">
@@ -393,7 +503,7 @@ export default function QuickSplitWidget({
           )}
         </div>
 
-        {/* 5. Xem trước đúng tin sẽ gửi */}
+        {/* 6. Xem trước đúng tin sẽ gửi */}
         <div>
           <p className={label}>Xem trước tin sẽ gửi</p>
           <div className="rounded-[16px] bg-wall p-3">

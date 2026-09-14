@@ -13,7 +13,7 @@ web
 
 ## Product Purpose
 
-Sổ Chung là sổ chi tiêu chung của một nhóm. Nó trả lời ngay: **ai còn nợ bao nhiêu, trả cho ai, trả bằng cách nào**. Sản phẩm thành công khi thành viên trả nợ mà không phải hỏi lại con số, và admin không phải đi nhắc từng người.
+Ting Ting là sổ chi tiêu chung của một nhóm. Nó trả lời ngay: **ai còn nợ bao nhiêu, trả cho ai, trả bằng cách nào**. Sản phẩm thành công khi thành viên trả nợ mà không phải hỏi lại con số, và admin không phải đi nhắc từng người.
 
 ## Positioning
 
@@ -51,7 +51,7 @@ Ràng buộc kỹ thuật: Next.js 16 App Router, React 19, Tailwind v4 (CSS-fir
 
 ## Brand Commitments
 
-- Tên sản phẩm: **Sổ Chung** (manifest còn ghi "Chia Tiền Nhóm", cần thống nhất).
+- Tên sản phẩm: **Ting Ting** — tiếng báo tiền về trong app ngân hàng (đổi từ "Sổ Chung" ngày 15/9/2026). Khóa localStorage `so-chung:me` giữ nguyên để không mất tên đã chọn trên máy người dùng.
 - Toàn bộ giao diện bằng tiếng Việt, tiền VND định dạng `vi-VN`.
 - Giọng văn thân mật, ngắn, như bạn bè nhắn nhau ("Chuyển xong nhắn … một tiếng").
 
@@ -64,7 +64,7 @@ Ràng buộc kỹ thuật: Next.js 16 App Router, React 19, Tailwind v4 (CSS-fir
 
 1. **Con số của tôi đi trước.** Mở ra là thấy mình nợ bao nhiêu và trả cho ai, trước mọi thống kê.
 2. **Trả được trong một chạm.** Từ con số đến QR và số tiền đúng, không phải nhớ hay gõ lại.
-3. **Không phán xét.** Không xếp hạng, không huy chương, không bêu tên người nợ; chỉ ghi chép minh bạch.
+3. **Không phán xét, nhưng rõ việc cần thu.** Không huy chương, không bảng thành tích, không lời chê trách. Danh sách người còn nợ xếp theo số tiền giảm dần để thấy ngay khoản lớn cần thu (người dùng chọn ngày 15/9/2026).
 4. **Không cần tài khoản.** Thành viên chỉ chọn tên; quyền sửa chỉ nằm ở admin.
 5. **Mọi con số khớp nhau.** Một nguồn tính duy nhất; tổng, phần từng người và báo cáo xuất ra phải trùng khớp.
 

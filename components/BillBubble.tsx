@@ -178,7 +178,7 @@ export default function BillBubble({
   );
 
   const shell = cn(
-    "block text-left w-full max-w-[min(88%,520px)] px-3.5 pt-3 pb-2.5 shadow-bubble",
+    "block text-left w-full max-w-[min(88%,520px)] lg:max-w-[min(88%,640px)] px-3.5 pt-3 pb-2.5 shadow-bubble",
     mine ? "bubble-out bg-mine text-on-mine" : "bubble-in bg-bubble text-ink",
     onOpen && "cursor-pointer transition-[filter] hover:brightness-[0.97]",
   );

@@ -1,5 +1,5 @@
 /**
- * lib/ledgerSelectors.ts — mọi giá trị dẫn xuất của Sổ Chung.
+ * lib/ledgerSelectors.ts — mọi giá trị dẫn xuất của Ting Ting.
  *
  * Lý do tách ra một file: mọi con số tiền trong app phải đi qua ĐÚNG MỘT
  * đường — shareOf() — nên đặt hết công thức ở đây, component chỉ đọc kết quả.
@@ -168,8 +168,9 @@ export function personRows(
         isMe: name === me,
       };
     })
-    // Không xếp theo số nợ (thành bảng xếp hạng): "bạn" lên đầu, rồi theo tên
-    .sort((a, b) => Number(b.isMe) - Number(a.isMe) || a.name.localeCompare(b.name, 'vi'));
+    // Người nợ nhiều lên trước để thấy ngay khoản lớn cần thu (người dùng chọn);
+    // vẫn không huy chương, không bảng thành tích.
+    .sort((a, b) => b.owed - a.owed || a.name.localeCompare(b.name, 'vi'));
 
   if (names.includes(payerName)) {
     const counts = countsFor(activities, payerName);

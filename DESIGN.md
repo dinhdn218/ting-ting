@@ -1,5 +1,5 @@
 ---
-name: Sổ Chung
+name: Ting Ting
 description: The group chat that keeps the math — a shared expense ledger told as a chat thread.
 colors:
   mine: "oklch(0.215 0.012 260)"
@@ -217,17 +217,17 @@ components:
     padding: "0 20px 24px"
 ---
 
-# Design System: Sổ Chung
+# Design System: Ting Ting
 
 ## Overview
 
 **Creative North Star: "The Group Chat That Keeps the Math"**
 
-Sổ Chung is the group's own chat thread, one that happens to keep the books. Every expense is a bill message sent by the person who fronted the money, and whoever has paid shows up as a ✓ in a row of initials, the way read receipts do in a messenger. The wallpaper is a cool grey, other people's messages are white bubbles, your own are solid ink, and the one thing that is about you right now, your number, is pinned in flat yellow above the thread.
+Ting Ting is the group's own chat thread, one that happens to keep the books. Every expense is a bill message sent by the person who fronted the money, and whoever has paid shows up as a ✓ in a row of initials, the way read receipts do in a messenger. The wallpaper is a cool grey, other people's messages are white bubbles, your own are solid ink, and the one thing that is about you right now, your number, is pinned in flat yellow above the thread.
 
 The system is dense and operational, built for a thirty-second visit on a phone: one typeface with hierarchy carried by size and weight, tabular figures wherever money appears, lucide line icons, and color spent almost entirely on meaning (ink is you, yellow is your pin, brick red is still owed, leaf green is paid). Surfaces are flat tonal layers; the only depth is a hair of contact shadow under bubbles and the lift of a sheet.
 
-It rejects the fintech balance card and the generic list-of-rows genre, and it fully replaces the earlier paper-ledger look of receipt paper and stamps. Nothing is ranked, decorated or celebrated. Motion exists only to report that a number or a status just changed.
+It rejects the fintech balance card and the generic list-of-rows genre, and it fully replaces the earlier paper-ledger look of receipt paper and stamps. Nothing is decorated or celebrated; the only ordering by amount is Còn nợ, largest first, to show what still needs collecting. Motion exists only to report that a number or a status just changed.
 
 **Key Characteristics:**
 - Chat-thread grammar: date chips, bill bubbles with a sender-side tail corner, a monthly summary posted as a system message, a docked composer.
@@ -303,7 +303,7 @@ Initials inside avatars and receipt chips drop to 10–11px semibold. That is an
 
 The app is one full-height column (100dvh): the chat header, the pinned bar, a scrolling region, and the composer docked at the bottom with safe-area padding. On phones the scrolling region is one of two tabs (Trò chuyện | Thành viên). From 1024px the tabs disappear and the region splits into a members column on panel (380px, 420px from 1280px) beside the thread on the wallpaper; at the same breakpoint sheets move from the bottom edge to a 440px right side sheet.
 
-Measures: thread, pinned-bar and composer content center at a maximum of 720px; a bill bubble is at most min(88%, 520px); the month summary is 520px; the members panel reads at a maximum of 640px. Gutters are 12px on phones and 16px from 640px; sheets use 20px. Rhythm: 12px between bubbles, 8px above each date chip, 32px between members-panel sections, 12px vertical padding in member rows (minimum row height 64px). Density is chat-tight: bubbles hold a lot of information in small, well-aligned type instead of spreading into whitespace. Every control keeps a 44px minimum touch target, enforced globally on buttons.
+Measures: the app runs full width; on phones the thread, pinned-bar and composer content center at a maximum of 720px, and from 1024px they center at a maximum of 1280px beside the 380px members column, with the thread split into bills (left) and a sticky 300–320px month-summary column (right); a bill bubble is at most min(88%, 520px); on phones the month summary sits right-aligned at 88% width; the members panel reads at a maximum of 640px. Gutters are 12px on phones and 16px from 640px; sheets use 20px. Rhythm: 12px between bubbles, 8px above each date chip, 32px between members-panel sections, 12px vertical padding in member rows (minimum row height 64px). Density is chat-tight: bubbles hold a lot of information in small, well-aligned type instead of spreading into whitespace. Every control keeps a 44px minimum touch target, enforced globally on buttons.
 
 ### Named Rules
 **The No Sideways Scroll Rule.** The page never scrolls horizontally. Only chip rows (the name picker, the filters) scroll on x, edge to edge, with the scrollbar hidden.
@@ -379,7 +379,7 @@ The status primitive. "Đã trả" is a Settled Mint pill with a check; "Chưa t
 ### Members Panel and Category Bars
 A group summary (one sentence, one paid/unpaid bar, a phase chip, a count line), then three groups of 64px member rows: avatar, name (with a yellow "bạn" tag for you), a count line, a small progress bar with "đã trả n%", and the amount on the right (owed in Unpaid Brick with a minus sign, the payer's receivable in Settled Leaf with a plus sign, settled members as a double check and "Xong"). Category spending is drawn as bars sorted by amount, all in Secondary Slate, each labelled directly with icon · name · count · amount · %.
 
-**The Ledger-Not-Leaderboard Rule.** Members are grouped by state (Còn nợ, Đã trả xong, Người ứng tiền) and sorted by name with you first. Never sort by amount, badge the biggest debtor, or add medals and streaks.
+**The Ledger-Not-Leaderboard Rule.** Members are grouped by state (Còn nợ, Đã trả xong, Người ứng tiền). Còn nợ is sorted by amount owed, largest first, so the biggest collection is visible at once (the user's call, 15/9/2026); ties fall back to name. Never badge the biggest debtor, number the rows, or add medals and streaks.
 
 ### Sheets and Motion
 **The One Overlay Rule.** Every detail opens in `SheetShell`: a bottom sheet on mobile, a 440px right side sheet at ≥1024px. `AlertDialog` is only for confirming a destructive or bulk action.
@@ -404,7 +404,7 @@ Mobile sheets carry a 40 × 4px grab handle, a head-sized title with a 44px clos
 - **Don't** add a second typeface, a display face or a system display font; hierarchy is size and weight.
 - **Don't** put eyebrow or kicker labels above headings; a heading stands alone and a count follows a middot ("Còn nợ · 9").
 - **Don't** build a hero-metric block or a fintech balance card; your number lives in the pinned bar and in sheets.
-- **Don't** rank, medal or spotlight members by how much they owe.
+- **Don't** medal, number or spotlight debtors. Ordering Còn nợ by amount owed is the only ranking the system allows.
 - **Don't** use emoji or text glyphs as icons.
 - **Don't** use yellow for anything that is not the pin or "me", or ink for anything that is not yours or the primary action.
 - **Don't** use a multi-hue categorical palette, or color a label with its bar's color.

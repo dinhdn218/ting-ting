@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCheck, Pin, QrCode, Users } from "lucide-react";
+import { CheckCheck, Pin, QrCode, Search, Users } from "lucide-react";
 import type { Ledger } from "@/lib/ledgerSelectors";
 import { PHASE_LABELS, money } from "@/lib/ledgerSelectors";
 import Money from "@/components/Money";
@@ -10,24 +10,34 @@ interface PinnedBarProps {
   me: string | null;
   payerName: string;
   onPickMe: (name: string) => void;
+  /** Mở sheet chọn tên đầy đủ (tìm được, cuộn được hết) */
+  onOpenWho: () => void;
   onPay: () => void;
   onOpenMe: () => void;
   onOpenMembers: () => void;
 }
 
+/** Số tên hiện sẵn trong tin ghim; còn lại tìm trong sheet. */
+const QUICK_NAMES = 5;
+
 const cta =
   "shrink-0 inline-flex items-center gap-1.5 min-h-11 px-4 rounded-full " +
   "bg-on-pin text-pin text-body font-semibold transition-opacity hover:opacity-90";
 
+const nameChip =
+  "shrink-0 min-h-11 px-4 rounded-full bg-on-pin text-pin text-small font-semibold " +
+  "transition-opacity hover:opacity-90";
+
 /**
  * Tin ghim vàng — luôn nói "con số của tôi" trước mọi thống kê.
- * Chưa chọn tên thì tin ghim hỏi "Bạn là ai?".
+ * Chưa chọn tên thì tin ghim hỏi "Bạn là ai?"; đã chọn thì có nút "Đổi người".
  */
 export default function PinnedBar({
   ledger,
   me,
   payerName,
   onPickMe,
+  onOpenWho,
   onPay,
   onOpenMe,
   onOpenMembers,
@@ -35,6 +45,8 @@ export default function PinnedBar({
   if (ledger.roster.length === 0) return null;
 
   const iOwe = !!me && !ledger.iAmPayer && ledger.myOwed > 0;
+  const quick = ledger.roster.slice(0, QUICK_NAMES);
+  const more = ledger.roster.length > QUICK_NAMES;
 
   const progress = (
     <div className="mt-2.5 flex items-center gap-2.5 text-meta text-on-pin-2">
@@ -58,7 +70,7 @@ export default function PinnedBar({
 
   return (
     <div className="flex-none bg-pin text-on-pin border-b border-pin-2">
-      <div className="mx-auto w-full max-w-[720px] px-4 pt-2.5 pb-3">
+      <div className="mx-auto w-full max-w-[720px] lg:max-w-[1280px] px-4 lg:px-6 pt-2.5 pb-3">
         {!me ? (
           <>
             <div className="flex items-center justify-between gap-3">
@@ -70,36 +82,52 @@ export default function PinnedBar({
                 Nhóm còn nợ {money(ledger.outstanding)}
               </p>
             </div>
-            <div className="flex gap-2 overflow-x-auto no-scrollbar mt-2 -mx-4 px-4">
-              {ledger.roster.map((name) => (
-                <button
-                  key={name}
-                  type="button"
-                  onClick={() => onPickMe(name)}
-                  className="shrink-0 min-h-11 px-4 rounded-full bg-on-pin text-pin
-                             text-small font-semibold transition-opacity hover:opacity-90"
-                >
+            <div className="flex flex-wrap gap-2 mt-2">
+              {quick.map((name) => (
+                <button key={name} type="button" onClick={() => onPickMe(name)} className={nameChip}>
                   {name}
                 </button>
               ))}
+              {more && (
+                <button
+                  type="button"
+                  onClick={onOpenWho}
+                  className="shrink-0 inline-flex items-center gap-1.5 min-h-11 px-4 rounded-full
+                             border border-on-pin text-on-pin text-small font-semibold
+                             transition-colors hover:bg-on-pin/10"
+                >
+                  <Search aria-hidden className="w-4 h-4" />
+                  Tìm tên · {ledger.roster.length} người
+                </button>
+              )}
             </div>
           </>
         ) : (
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={ledger.iAmPayer ? onOpenMembers : onOpenMe}
-              className="min-w-0 flex-1 text-left min-h-11"
-            >
-              <span className="flex items-center gap-1.5 text-small font-medium text-on-pin-2">
-                <Pin aria-hidden className="w-3.5 h-3.5 rotate-45" />
-                {ledger.iAmPayer
-                  ? "Bạn còn phải thu"
-                  : iOwe
-                    ? `Bạn còn nợ ${payerName} · ${ledger.myCounts.unpaid} khoản`
-                    : `${me} · đã trả xong ${ledger.myCounts.total} khoản`}
-              </span>
-              <span className="block text-[22px] leading-tight font-bold mt-0.5">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-small font-medium text-on-pin-2">
+                <Pin aria-hidden className="w-3.5 h-3.5 shrink-0 rotate-45" />
+                <span className="truncate">
+                  {ledger.iAmPayer
+                    ? `${me} · bạn còn phải thu`
+                    : iOwe
+                      ? `${me} · còn nợ ${payerName} · ${ledger.myCounts.unpaid} khoản`
+                      : `${me} · đã trả xong ${ledger.myCounts.total} khoản`}
+                </span>
+                <button
+                  type="button"
+                  onClick={onOpenWho}
+                  className="shrink-0 min-h-11 -my-3 px-2 font-semibold text-on-pin
+                             underline underline-offset-[3px] decoration-1 hover:decoration-2"
+                >
+                  Đổi người
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={ledger.iAmPayer ? onOpenMembers : onOpenMe}
+                className="block text-left min-h-11 text-[22px] leading-tight font-bold"
+              >
                 {ledger.iAmPayer ? (
                   <Money value={ledger.outstanding} animate />
                 ) : iOwe ? (
@@ -110,8 +138,8 @@ export default function PinnedBar({
                     Không còn nợ
                   </span>
                 )}
-              </span>
-            </button>
+              </button>
+            </div>
 
             {iOwe ? (
               <button type="button" onClick={onPay} className={cta}>
