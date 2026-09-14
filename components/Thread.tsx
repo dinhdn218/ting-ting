@@ -1,0 +1,106 @@
+"use client";
+
+import { Fragment } from "react";
+import { BookOpen, SearchX } from "lucide-react";
+import type { Activity } from "@/types";
+import type { ThreadMonth } from "@/lib/ledgerSelectors";
+import { money } from "@/lib/ledgerSelectors";
+import { cn } from "@/lib/utils";
+import { btnOutline } from "@/lib/styles";
+import BillBubble from "@/components/BillBubble";
+import CategoryBars from "@/components/CategoryBars";
+
+interface ThreadProps {
+  months: ThreadMonth[];
+  me: string | null;
+  payerName: string;
+  onOpen: (activity: Activity) => void;
+  /** Đang lọc → ẩn tin tổng kết tháng (nó chỉ đúng với toàn bộ dữ liệu) */
+  filtered: boolean;
+  onClearFilter: () => void;
+  /** "2026-09" — tháng hiện tại, tin tổng kết ghi "đến hôm nay" */
+  nowKey: string;
+}
+
+/** Luồng trò chuyện: cũ ở trên, mới ở dưới; nhãn ngày và tin tổng kết tháng xen giữa. */
+export default function Thread({
+  months,
+  me,
+  payerName,
+  onOpen,
+  filtered,
+  onClearFilter,
+  nowKey,
+}: ThreadProps) {
+  if (months.length === 0) {
+    return (
+      <div className="mx-auto w-full max-w-[720px] px-4 py-12 text-center">
+        <SearchX aria-hidden className="w-7 h-7 text-ink-3 mx-auto" />
+        <h2 className="text-row font-semibold mt-3">Không có khoản nào khớp</h2>
+        <p className="text-body text-ink-2 mt-1.5">
+          Thử bỏ bớt điều kiện lọc hoặc tìm bằng tên người.
+        </p>
+        {filtered && (
+          <button
+            type="button"
+            onClick={onClearFilter}
+            className={cn(btnOutline, "mt-5 rounded-full")}
+          >
+            Bỏ lọc
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-[720px] px-3 sm:px-4 pt-4 pb-6 space-y-3">
+      {months.map((m) => (
+        <Fragment key={m.key}>
+          {m.days.map((d) => (
+            <Fragment key={d.key}>
+              <div className="flex justify-center pt-2">
+                <span className="px-3 py-1 rounded-full bg-wall-2 text-meta font-medium text-ink-2">
+                  {d.label}
+                </span>
+              </div>
+              {d.rows.map((r, i) => (
+                <BillBubble
+                  key={r.activity.id}
+                  activity={r.activity}
+                  me={me}
+                  payerName={payerName}
+                  onOpen={() => onOpen(r.activity)}
+                  showSender={i === 0}
+                />
+              ))}
+            </Fragment>
+          ))}
+
+          {!filtered && <MonthSummary month={m} current={m.key === nowKey} />}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+/** Tin hệ thống của "Sổ Chung": tổng kết tháng theo danh mục. */
+function MonthSummary({ month, current }: { month: ThreadMonth; current: boolean }) {
+  return (
+    <section
+      aria-label={`Tổng kết tháng ${month.month}`}
+      className="mx-auto w-full max-w-[520px] rounded-bubble bg-panel px-4 pt-3.5 pb-4 mt-2"
+    >
+      <h3 className="flex items-center gap-1.5 text-body font-semibold">
+        <BookOpen aria-hidden className="w-4 h-4 text-ink-3" />
+        {current
+          ? `Sổ Chung · tháng ${month.month} đến hôm nay`
+          : `Sổ Chung · tổng kết tháng ${month.month}/${month.year}`}
+      </h3>
+      <p className="text-small text-ink-2 tnum mt-0.5">
+        {month.count} khoản · {money(month.sum)}
+      </p>
+      <CategoryBars items={month.categories} className="mt-3.5" />
+    </section>
+  );
+}

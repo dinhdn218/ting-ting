@@ -1,20 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
+const beVietnam = Be_Vietnam_Pro({
+  subsets: ["vietnamese", "latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-be-vietnam",
 });
 
 export const metadata: Metadata = {
-  title: "Sổ Chung - Chia tiền nhóm",
+  title: "Sổ Chung — sổ chi tiêu của nhóm",
   description:
-    "Sổ ghi chép chi tiêu chung của nhóm. Xem ai còn nợ bao nhiêu và trả cho ai, không cần đăng nhập.",
+    "Sổ chi tiêu chung của nhóm. Xem ai còn nợ bao nhiêu và trả cho ai, không cần đăng nhập.",
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
@@ -24,8 +22,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f9f7f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#241f1a" },
+    { media: "(prefers-color-scheme: light)", color: "#edeff3" },
+    { media: "(prefers-color-scheme: dark)", color: "#14161b" },
   ],
 };
 
@@ -35,11 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="vi"
-      className={cn(geistSans.variable, geistMono.variable)}
-      suppressHydrationWarning
-    >
+    <html lang="vi" className={beVietnam.variable} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -48,7 +42,6 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <div className="paper-grain" aria-hidden />
         <TooltipProvider>{children}</TooltipProvider>
       </body>
     </html>

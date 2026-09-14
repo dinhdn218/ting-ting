@@ -1,11 +1,11 @@
 {
-  "name": "Chia Tiền Nhóm",
-  "short_name": "Chia Tiền",
-  "description": "Ứng dụng quản lý và chia tiền chi tiêu nhóm dễ dàng, minh bạch",
+  "name": "Sổ Chung",
+  "short_name": "Sổ Chung",
+  "description": "Sổ chi tiêu chung của nhóm — ai còn nợ bao nhiêu, trả cho ai",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4f46e5",
+  "background_color": "#edeff3",
+  "theme_color": "#edeff3",
   "orientation": "portrait",
   "icons": [
     {

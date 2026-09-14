@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-15T12:00:00Z",
+  "title": "Design System: Sổ Chung",
+  "extensions": {
+    "colorMeta": {
+      "mine": { "role": "primary", "displayName": "Group-Chat Ink", "canonical": "oklch(0.215 0.012 260)", "dark": "oklch(0.93 0.006 250)", "tonalRamp": ["oklch(0.15 0.012 260)", "oklch(0.26 0.012 260)", "oklch(0.37 0.012 260)", "oklch(0.48 0.012 260)", "oklch(0.6 0.012 260)", "oklch(0.72 0.012 260)", "oklch(0.84 0.012 260)", "oklch(0.95 0.012 260)"] },
+      "on-mine": { "role": "primary", "displayName": "On-Ink Paper", "canonical": "oklch(0.975 0.004 250)", "dark": "oklch(0.2 0.012 260)", "tonalRamp": ["oklch(0.15 0.004 250)", "oklch(0.26 0.004 250)", "oklch(0.37 0.004 250)", "oklch(0.48 0.004 250)", "oklch(0.6 0.004 250)", "oklch(0.72 0.004 250)", "oklch(0.84 0.004 250)", "oklch(0.95 0.004 250)"] },
+      "on-mine-2": { "role": "primary", "displayName": "On-Ink Muted", "canonical": "oklch(0.80 0.008 250)", "dark": "oklch(0.42 0.012 260)", "tonalRamp": ["oklch(0.15 0.008 250)", "oklch(0.26 0.008 250)", "oklch(0.37 0.008 250)", "oklch(0.48 0.008 250)", "oklch(0.6 0.008 250)", "oklch(0.72 0.008 250)", "oklch(0.84 0.008 250)", "oklch(0.95 0.008 250)"] },
+      "pin": { "role": "secondary", "displayName": "Pinned-Note Yellow", "canonical": "oklch(0.894 0.157 91)", "dark": "oklch(0.86 0.15 91)", "tonalRamp": ["oklch(0.15 0.157 91)", "oklch(0.26 0.157 91)", "oklch(0.37 0.157 91)", "oklch(0.48 0.157 91)", "oklch(0.6 0.157 91)", "oklch(0.72 0.157 91)", "oklch(0.84 0.157 91)", "oklch(0.95 0.157 91)"] },
+      "pin-2": { "role": "secondary", "displayName": "Pin Rule Gold", "canonical": "oklch(0.80 0.15 85)", "dark": "oklch(0.74 0.14 85)", "tonalRamp": ["oklch(0.15 0.15 85)", "oklch(0.26 0.15 85)", "oklch(0.37 0.15 85)", "oklch(0.48 0.15 85)", "oklch(0.6 0.15 85)", "oklch(0.72 0.15 85)", "oklch(0.84 0.15 85)", "oklch(0.95 0.15 85)"] },
+      "on-pin": { "role": "secondary", "displayName": "Pin Ink", "canonical": "oklch(0.205 0.012 260)", "dark": "oklch(0.2 0.012 260)", "tonalRamp": ["oklch(0.15 0.012 260)", "oklch(0.26 0.012 260)", "oklch(0.37 0.012 260)", "oklch(0.48 0.012 260)", "oklch(0.6 0.012 260)", "oklch(0.72 0.012 260)", "oklch(0.84 0.012 260)", "oklch(0.95 0.012 260)"] },
+      "on-pin-2": { "role": "secondary", "displayName": "Pin Brown", "canonical": "oklch(0.36 0.04 80)", "dark": "oklch(0.34 0.04 80)", "tonalRamp": ["oklch(0.15 0.04 80)", "oklch(0.26 0.04 80)", "oklch(0.37 0.04 80)", "oklch(0.48 0.04 80)", "oklch(0.6 0.04 80)", "oklch(0.72 0.04 80)", "oklch(0.84 0.04 80)", "oklch(0.95 0.04 80)"] },
+      "owe": { "role": "tertiary", "displayName": "Unpaid Brick", "canonical": "oklch(0.535 0.175 28)", "dark": "oklch(0.74 0.15 28)", "tonalRamp": ["oklch(0.15 0.175 28)", "oklch(0.26 0.175 28)", "oklch(0.37 0.175 28)", "oklch(0.48 0.175 28)", "oklch(0.6 0.175 28)", "oklch(0.72 0.175 28)", "oklch(0.84 0.175 28)", "oklch(0.95 0.175 28)"] },
+      "owe-wash": { "role": "tertiary", "displayName": "Owed Blush", "canonical": "oklch(0.955 0.028 28)", "dark": "oklch(0.29 0.05 28)", "tonalRamp": ["oklch(0.15 0.028 28)", "oklch(0.26 0.028 28)", "oklch(0.37 0.028 28)", "oklch(0.48 0.028 28)", "oklch(0.6 0.028 28)", "oklch(0.72 0.028 28)", "oklch(0.84 0.028 28)", "oklch(0.95 0.028 28)"] },
+      "paid": { "role": "tertiary", "displayName": "Settled Leaf", "canonical": "oklch(0.515 0.125 152)", "dark": "oklch(0.76 0.13 152)", "tonalRamp": ["oklch(0.15 0.125 152)", "oklch(0.26 0.125 152)", "oklch(0.37 0.125 152)", "oklch(0.48 0.125 152)", "oklch(0.6 0.125 152)", "oklch(0.72 0.125 152)", "oklch(0.84 0.125 152)", "oklch(0.95 0.125 152)"] },
+      "paid-wash": { "role": "tertiary", "displayName": "Settled Mint", "canonical": "oklch(0.952 0.035 152)", "dark": "oklch(0.28 0.045 152)", "tonalRamp": ["oklch(0.15 0.035 152)", "oklch(0.26 0.035 152)", "oklch(0.37 0.035 152)", "oklch(0.48 0.035 152)", "oklch(0.6 0.035 152)", "oklch(0.72 0.035 152)", "oklch(0.84 0.035 152)", "oklch(0.95 0.035 152)"] },
+      "wall": { "role": "neutral", "displayName": "Cool Chat Wallpaper", "canonical": "oklch(0.952 0.006 250)", "dark": "oklch(0.165 0.008 260)", "tonalRamp": ["oklch(0.15 0.006 250)", "oklch(0.26 0.006 250)", "oklch(0.37 0.006 250)", "oklch(0.48 0.006 250)", "oklch(0.6 0.006 250)", "oklch(0.72 0.006 250)", "oklch(0.84 0.006 250)", "oklch(0.95 0.006 250)"] },
+      "wall-2": { "role": "neutral", "displayName": "Date-Chip Grey", "canonical": "oklch(0.918 0.008 250)", "dark": "oklch(0.235 0.010 260)", "tonalRamp": ["oklch(0.15 0.008 250)", "oklch(0.26 0.008 250)", "oklch(0.37 0.008 250)", "oklch(0.48 0.008 250)", "oklch(0.6 0.008 250)", "oklch(0.72 0.008 250)", "oklch(0.84 0.008 250)", "oklch(0.95 0.008 250)"] },
+      "panel": { "role": "neutral", "displayName": "Side-Panel Paper", "canonical": "oklch(0.985 0.003 250)", "dark": "oklch(0.195 0.009 260)", "tonalRamp": ["oklch(0.15 0.003 250)", "oklch(0.26 0.003 250)", "oklch(0.37 0.003 250)", "oklch(0.48 0.003 250)", "oklch(0.6 0.003 250)", "oklch(0.72 0.003 250)", "oklch(0.84 0.003 250)", "oklch(0.95 0.003 250)"] },
+      "bubble": { "role": "neutral", "displayName": "Incoming Bubble White", "canonical": "oklch(1 0 0)", "dark": "oklch(0.245 0.010 260)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.26 0 0)", "oklch(0.37 0 0)", "oklch(0.48 0 0)", "oklch(0.6 0 0)", "oklch(0.72 0 0)", "oklch(0.84 0 0)", "oklch(0.95 0 0)"] },
+      "ink": { "role": "neutral", "displayName": "Message Ink", "canonical": "oklch(0.205 0.012 260)", "dark": "oklch(0.955 0.005 250)", "tonalRamp": ["oklch(0.15 0.012 260)", "oklch(0.26 0.012 260)", "oklch(0.37 0.012 260)", "oklch(0.48 0.012 260)", "oklch(0.6 0.012 260)", "oklch(0.72 0.012 260)", "oklch(0.84 0.012 260)", "oklch(0.95 0.012 260)"] },
+      "ink-2": { "role": "neutral", "displayName": "Secondary Slate", "canonical": "oklch(0.43 0.014 260)", "dark": "oklch(0.79 0.010 250)", "tonalRamp": ["oklch(0.15 0.014 260)", "oklch(0.26 0.014 260)", "oklch(0.37 0.014 260)", "oklch(0.48 0.014 260)", "oklch(0.6 0.014 260)", "oklch(0.72 0.014 260)", "oklch(0.84 0.014 260)", "oklch(0.95 0.014 260)"] },
+      "ink-3": { "role": "neutral", "displayName": "Timestamp Slate", "canonical": "oklch(0.515 0.014 260)", "dark": "oklch(0.68 0.012 250)", "tonalRamp": ["oklch(0.15 0.014 260)", "oklch(0.26 0.014 260)", "oklch(0.37 0.014 260)", "oklch(0.48 0.014 260)", "oklch(0.6 0.014 260)", "oklch(0.72 0.014 260)", "oklch(0.84 0.014 260)", "oklch(0.95 0.014 260)"] },
+      "line": { "role": "neutral", "displayName": "Hairline", "canonical": "oklch(0.895 0.008 250)", "dark": "oklch(0.30 0.010 260)", "tonalRamp": ["oklch(0.15 0.008 250)", "oklch(0.26 0.008 250)", "oklch(0.37 0.008 250)", "oklch(0.48 0.008 250)", "oklch(0.6 0.008 250)", "oklch(0.72 0.008 250)", "oklch(0.84 0.008 250)", "oklch(0.95 0.008 250)"] },
+      "line-strong": { "role": "neutral", "displayName": "Divider Steel", "canonical": "oklch(0.80 0.010 250)", "dark": "oklch(0.40 0.012 260)", "tonalRamp": ["oklch(0.15 0.01 250)", "oklch(0.26 0.01 250)", "oklch(0.37 0.01 250)", "oklch(0.48 0.01 250)", "oklch(0.6 0.01 250)", "oklch(0.72 0.01 250)", "oklch(0.84 0.01 250)", "oklch(0.95 0.01 250)"] },
+      "qr": { "role": "neutral", "displayName": "Scanner White", "canonical": "oklch(1 0 0)", "dark": "oklch(1 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.26 0 0)", "oklch(0.37 0 0)", "oklch(0.48 0 0)", "oklch(0.6 0 0)", "oklch(0.72 0 0)", "oklch(0.84 0 0)", "oklch(0.95 0 0)"] }
+    },
+    "typographyMeta": {
+      "hero": { "displayName": "Hero", "purpose": "Your amount inside the Pay sheet; tabular, 700." },
+      "fig": { "displayName": "Fig", "purpose": "Lead amount in a sheet: bill total, a person's debt, the amount being entered." },
+      "head": { "displayName": "Head", "purpose": "Sheet, dialog and panel titles." },
+      "row": { "displayName": "Row", "purpose": "Bill titles, person names, bubble totals, group name, members-panel section headings (500 in member rows)." },
+      "body": { "displayName": "Body", "purpose": "Sentences and descriptions; buttons and tabs at 600." },
+      "small": { "displayName": "Small", "purpose": "Bubble meta line, chips, status marks, progress labels." },
+      "meta": { "displayName": "Meta", "purpose": "Timestamps, date chips, the pinned bar's group line." }
+    },
+    "shadows": [
+      { "name": "bubble", "value": "0 1px 2px oklch(0.2 0.02 260 / 0.08)", "purpose": "Contact shadow under every bill bubble (light theme)." },
+      { "name": "bubble-dark", "value": "0 1px 2px oklch(0.05 0.01 260 / 0.4)", "purpose": "Contact shadow under every bill bubble (dark theme)." },
+      { "name": "sheet", "value": "0 -12px 40px oklch(0.2 0.02 260 / 0.14)", "purpose": "Lift under bottom and side sheets only (light theme)." },
+      { "name": "sheet-dark", "value": "0 -12px 40px oklch(0.05 0.01 260 / 0.55)", "purpose": "Lift under bottom and side sheets only (dark theme)." }
+    ],
+    "motion": [
+      { "name": "digit-roll", "value": "transform 420ms cubic-bezier(0.3, 1.25, 0.5, 1)", "purpose": "Each digit of a headline amount is a 0-9 strip that rolls to its value, overshooting by one step, when realtime data changes." },
+      { "name": "tick-pop", "value": "220ms cubic-bezier(0.2, 0.8, 0.2, 1); scale 0.4 -> 1.18 -> 1, opacity 0 -> 1", "purpose": "A ✓ badge that just turned paid pops in on its initials chip." },
+      { "name": "progress-width", "value": "width 500ms cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Group and member progress bars ease to a new percentage." },
+      { "name": "control-hover", "value": "150ms cubic-bezier(0.4, 0, 0.2, 1) on color, background, border-color, opacity", "purpose": "Hover and pressed feedback on buttons, chips, rows and tabs." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce): animation and transition durations 0.001ms", "purpose": "Collapses all motion; Money renders static text instead of rolling digits." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one ink action per view: Pay with the exact amount, Save, confirm.",
+      "html": "<button class='ds-btn-primary'><svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><rect width='5' height='5' x='3' y='3' rx='1'/><rect width='5' height='5' x='16' y='3' rx='1'/><rect width='5' height='5' x='3' y='16' rx='1'/><path d='M21 16h-3a2 2 0 0 0-2 2v3'/><path d='M21 21v.01'/><path d='M12 7v3a2 2 0 0 1-2 2H7'/><path d='M3 12h.01'/><path d='M12 3h.01'/><path d='M12 16v.01'/><path d='M16 12h1'/><path d='M21 12v.01'/><path d='M12 21v-1'/></svg>Trả 607.333đ</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:var(--radius-ctl);background:var(--mine);color:var(--on-mine);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:0.9375rem;font-weight:600;font-variant-numeric:tabular-nums;cursor:pointer;transition:opacity 150ms}.ds-btn-primary:hover{opacity:.9}.ds-btn-primary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.ds-btn-primary:disabled{opacity:.4;cursor:not-allowed}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary route: View QR when the pin already offers Pay, admin login.",
+      "html": "<button class='ds-btn-outline'>Xem QR chuyển khoản</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border:1px solid var(--line-strong);border-radius:var(--radius-ctl);background:transparent;color:var(--ink);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:0.9375rem;font-weight:500;cursor:pointer;transition:background-color 150ms}.ds-btn-outline:hover{background:var(--wall-2)}.ds-btn-outline:focus-visible{outline:2px solid var(--ink);outline-offset:2px}"
+    },
+    {
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "icon-button",
+      "description": "44px circular header and sheet control; pressed state fills grey.",
+      "html": "<div class='ds-iconrow'><button class='ds-icon' aria-label='Tìm'><svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg></button><button class='ds-icon' aria-label='Giao diện tối'><svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/></svg></button><button class='ds-icon' aria-label='Tùy chọn' aria-pressed='true'><svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='12' cy='12' r='1'/><circle cx='12' cy='5' r='1'/><circle cx='12' cy='19' r='1'/></svg></button></div>",
+      "css": ".ds-iconrow{display:flex}.ds-icon{display:inline-grid;place-items:center;width:44px;height:44px;border:0;border-radius:9999px;background:transparent;color:var(--ink-2);cursor:pointer;transition:background-color 150ms,color 150ms}.ds-icon:hover,.ds-icon[aria-pressed='true']{background:var(--wall-2);color:var(--ink)}.ds-icon:focus-visible{outline:2px solid var(--ink);outline-offset:2px}"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "44px pill for status and category filters; active fills ink.",
+      "html": "<div class='ds-chiprow'><button class='ds-chip' aria-pressed='true'>Tất cả</button><button class='ds-chip' aria-pressed='false'>Còn người chưa trả</button><button class='ds-chip' aria-pressed='false'><svg viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2'/><path d='M7 2v20'/><path d='M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7'/></svg>Ăn uống<span class='ds-chip-n'>5</span></button></div>",
+      "css": ".ds-chiprow{display:flex;gap:8px;flex-wrap:wrap}.ds-chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:9999px;background:var(--bubble);color:var(--ink-2);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:0.8125rem;font-weight:500;white-space:nowrap;cursor:pointer;transition:border-color 150ms,color 150ms,background-color 150ms}.ds-chip:hover{border-color:var(--line-strong);color:var(--ink)}.ds-chip[aria-pressed='true']{background:var(--mine);color:var(--on-mine);border-color:var(--mine)}.ds-chip:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.ds-chip-n{color:var(--ink-3);font-variant-numeric:tabular-nums}.ds-chip[aria-pressed='true'] .ds-chip-n{color:var(--on-mine-2)}"
+    },
+    {
+      "name": "Sheet Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Form field inside sheets; the border shifts to ink on focus, no glow.",
+      "html": "<label class='ds-field'><span class='ds-field-label'>Nội dung</span><input placeholder='Ví dụ: Quán nhỏ tối thứ Hai'></label>",
+      "css": ".ds-field{display:block;max-width:360px;padding:12px 16px;border:1px solid var(--line);border-radius:var(--radius-ctl);background:var(--bubble);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;transition:border-color 150ms}.ds-field:focus-within{border-color:var(--ink)}.ds-field-label{display:block;font-size:0.75rem;font-weight:500;color:var(--ink-3)}.ds-field input{width:100%;margin-top:2px;border:0;background:transparent;outline:none;font:inherit;font-size:0.9375rem;color:var(--ink)}.ds-field input::placeholder{color:var(--ink-3);opacity:1}"
+    },
+    {
+      "name": "Header Tabs",
+      "kind": "nav",
+      "description": "Mobile two-tab switch under the chat header; ink underline marks the active tab.",
+      "html": "<nav class='ds-tabs' aria-label='Màn hình'><button aria-current='page'>Trò chuyện</button><button>Thành viên<span>9</span></button></nav>",
+      "css": ".ds-tabs{display:grid;grid-template-columns:1fr 1fr;max-width:420px;background:var(--panel);border-bottom:1px solid var(--line)}.ds-tabs button{position:relative;min-height:44px;border:0;background:transparent;font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:0.9375rem;font-weight:600;color:var(--ink-3);cursor:pointer;transition:color 150ms}.ds-tabs button:hover{color:var(--ink-2)}.ds-tabs button[aria-current='page']{color:var(--ink)}.ds-tabs button::after{content:'';position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:48px;height:3px;border-radius:9999px 9999px 0 0;background:transparent;transition:background-color 150ms}.ds-tabs button[aria-current='page']::after{background:var(--ink)}.ds-tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}.ds-tabs span{margin-left:6px;font-weight:500;color:var(--ink-3);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Bill Bubble",
+      "kind": "card",
+      "refersTo": "bubble-incoming",
+      "description": "Signature: one expense as a bill message with the fixed label grid, ✓ read-receipt initials and your share.",
+      "html": "<div class='ds-bubble-row'><span class='ds-bav'>AD</span><button class='ds-bubble'><span class='ds-sender'>Admin đã ứng</span><span class='ds-bgrid'><span class='ds-mark'><svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2'/><path d='M7 2v20'/><path d='M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7'/></svg></span><span class='ds-bmain'><span class='ds-btitle'>Ngan cháy tỏi</span><span class='ds-bsub'>Ăn uống · chia đều</span></span><span class='ds-btotal'>160.000đ</span></span><span class='ds-bfoot'><span class='ds-inits'><span class='ds-init ds-init-paid'>ĐI<i><svg viewBox='0 0 24 24' width='10' height='10' fill='none' stroke='currentColor' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg></i></span><span class='ds-init'>OA</span></span><span class='ds-bprog'><svg viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg>1/2 đã trả</span><span class='ds-btime'>02:20</span></span><span class='ds-share'><b>Phần của bạn</b><b>80.000đ · chưa trả</b></span></button></div>",
+      "css": ".ds-bubble-row{display:flex;align-items:flex-end;gap:8px;max-width:440px;font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif}.ds-bav{display:grid;place-items:center;flex:none;width:32px;height:32px;margin-bottom:2px;border-radius:9999px;background:var(--mine);color:var(--on-mine);font-size:11px;font-weight:600}.ds-bubble{display:block;flex:1;min-width:0;padding:12px 14px 10px;border:0;text-align:left;font:inherit;background:var(--bubble);color:var(--ink);border-radius:var(--radius-bubble) var(--radius-bubble) var(--radius-bubble) 6px;box-shadow:var(--shadow-bubble);cursor:pointer;transition:filter 150ms}.ds-bubble:hover{filter:brightness(.97)}.ds-bubble:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.ds-sender{display:block;margin-bottom:6px;font-size:0.75rem;font-weight:600;color:var(--ink-2)}.ds-bgrid{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:12px;align-items:start}.ds-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--wall-2);color:var(--ink-2)}.ds-bmain{min-width:0}.ds-btitle{display:block;font-size:1.0625rem;line-height:1.35;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-bsub{display:block;margin-top:2px;font-size:0.8125rem;color:var(--ink-3)}.ds-btotal{padding-top:1px;font-size:1.0625rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}.ds-bfoot{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.ds-inits{display:flex}.ds-init{position:relative;display:grid;place-items:center;width:28px;height:28px;margin-left:-4px;border-radius:9999px;border:1px dashed var(--line-strong);background:var(--bubble);color:var(--ink-3);font-size:10px;font-weight:600;box-shadow:0 0 0 2px var(--bubble)}.ds-init:first-child{margin-left:0}.ds-init-paid{z-index:1;border:0;background:var(--paid-wash);color:var(--paid)}.ds-init-paid i{position:absolute;right:-4px;bottom:-4px;display:grid;place-items:center;width:14px;height:14px;border-radius:9999px;background:var(--paid);color:var(--on-mine);box-shadow:0 0 0 2px var(--bubble);animation:ds-tick 220ms cubic-bezier(.2,.8,.2,1)}@keyframes ds-tick{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1)}}.ds-bprog{display:flex;align-items:center;gap:4px;margin-left:auto;font-size:0.8125rem;font-weight:500;color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}.ds-btime{font-size:0.75rem;color:var(--ink-3);font-variant-numeric:tabular-nums}.ds-share{display:flex;justify-content:space-between;gap:8px;margin:10px -6px 0;padding:8px 10px;border-radius:12px;background:var(--owe-wash);color:var(--owe);font-size:0.8125rem}.ds-share b{font-weight:600;font-variant-numeric:tabular-nums}@media (prefers-reduced-motion:reduce){.ds-init-paid i{animation:none}}"
+    },
+    {
+      "name": "Pinned Bar",
+      "kind": "custom",
+      "refersTo": "pinned-bar",
+      "description": "Signature: the flat yellow pin that states your number, carries the Pay action and the group phase.",
+      "html": "<div class='ds-pin'><div class='ds-pin-row'><div class='ds-pin-copy'><span class='ds-pin-label'><svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M12 17v5'/><path d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/></svg>Bạn còn nợ Minh · 3 khoản</span><span class='ds-pin-fig'>607.333đ</span></div><button class='ds-pin-cta'><svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><rect width='5' height='5' x='3' y='3' rx='1'/><rect width='5' height='5' x='16' y='3' rx='1'/><rect width='5' height='5' x='3' y='16' rx='1'/><path d='M21 16h-3a2 2 0 0 0-2 2v3'/><path d='M21 21v.01'/><path d='M12 7v3a2 2 0 0 1-2 2H7'/><path d='M3 12h.01'/><path d='M12 3h.01'/><path d='M12 16v.01'/><path d='M16 12h1'/><path d='M21 12v.01'/><path d='M12 21v-1'/></svg>Trả</button></div><div class='ds-pin-prog'><span class='ds-pin-phase'>Cả nhóm · Gần xong</span><span class='ds-pin-track' role='progressbar' aria-valuenow='72' aria-valuemin='0' aria-valuemax='100'><span style='width:72%'></span></span><span>đã thu 72%</span></div></div>",
+      "css": ".ds-pin{max-width:440px;padding:10px 16px 12px;background:var(--pin);color:var(--on-pin);border-bottom:1px solid var(--pin-2);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif}.ds-pin-row{display:flex;align-items:center;gap:12px}.ds-pin-copy{flex:1;min-width:0}.ds-pin-label{display:flex;align-items:center;gap:6px;font-size:0.8125rem;font-weight:500;color:var(--on-pin-2)}.ds-pin-label svg{transform:rotate(45deg)}.ds-pin-fig{display:block;margin-top:2px;font-size:22px;line-height:1.25;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}.ds-pin-cta{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 16px;border:0;border-radius:9999px;background:var(--on-pin);color:var(--pin);font:inherit;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:opacity 150ms}.ds-pin-cta:hover{opacity:.9}.ds-pin-cta:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.ds-pin-prog{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:0.75rem;color:var(--on-pin-2);font-variant-numeric:tabular-nums}.ds-pin-phase{flex:none;font-weight:600}.ds-pin-track{flex:1;height:6px;border-radius:9999px;background:var(--pin-2);overflow:hidden}.ds-pin-track span{display:block;height:100%;border-radius:9999px;background:var(--on-pin);transition:width 500ms}"
+    },
+    {
+      "name": "Paid Mark",
+      "kind": "chip",
+      "refersTo": "paid-mark-paid",
+      "description": "Status primitive: word, icon and solid-vs-dashed shape; the admin form toggles.",
+      "html": "<div class='ds-marks'><button class='ds-paid ds-paid-yes' aria-pressed='true'><svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg>Đã trả</button><button class='ds-paid ds-paid-no' aria-pressed='false'><svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M10.1 2.182a10 10 0 0 1 3.8 0'/><path d='M13.9 21.818a10 10 0 0 1-3.8 0'/><path d='M17.609 3.721a10 10 0 0 1 2.69 2.7'/><path d='M2.182 13.9a10 10 0 0 1 0-3.8'/><path d='M20.279 17.609a10 10 0 0 1-2.7 2.69'/><path d='M21.818 10.1a10 10 0 0 1 0 3.8'/><path d='M3.721 6.391a10 10 0 0 1 2.7-2.69'/><path d='M6.391 20.279a10 10 0 0 1-2.69-2.7'/></svg>Chưa trả</button></div>",
+      "css": ".ds-marks{display:flex;gap:8px;flex-wrap:wrap}.ds-paid{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:108px;padding:0 12px;border-radius:9999px;font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:0.8125rem;font-weight:600;white-space:nowrap;cursor:pointer;transition:background-color 150ms,border-color 150ms}.ds-paid-yes{background:var(--paid-wash);color:var(--paid);border:1px solid transparent}.ds-paid-no{background:transparent;color:var(--owe);border:1px dashed color-mix(in oklch,var(--owe) 70%,transparent)}.ds-paid-no:hover{border-style:solid}.ds-paid:focus-visible{outline:2px solid var(--ink);outline-offset:2px}"
+    },
+    {
+      "name": "Composer",
+      "kind": "input",
+      "refersTo": "composer",
+      "description": "Docked admin action styled as the chat's message field, with an ink send disc.",
+      "html": "<button class='ds-composer'><svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M5 12h14'/><path d='M12 5v14'/></svg><span class='ds-composer-text'>Ghi khoản mới…</span><span class='ds-composer-send'><svg viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z'/><path d='M6 12h16'/></svg></span></button>",
+      "css": ".ds-composer{display:flex;align-items:center;gap:10px;width:100%;max-width:440px;min-height:48px;padding:0 6px 0 16px;border:1px solid var(--line-strong);border-radius:9999px;background:var(--bubble);color:var(--ink-2);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;text-align:left;cursor:pointer;transition:border-color 150ms}.ds-composer:hover{border-color:var(--ink-3)}.ds-composer:focus-visible{outline:2px solid var(--ink);outline-offset:2px}.ds-composer-text{flex:1;font-size:0.9375rem;color:var(--ink-3)}.ds-composer-send{display:grid;place-items:center;width:36px;height:36px;border-radius:9999px;background:var(--mine);color:var(--on-mine)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Group Chat That Keeps the Math",
+    "overview": "Sổ Chung is the group's own chat thread, one that happens to keep the books. Every expense is a bill message sent by the person who fronted the money, and whoever has paid shows up as a ✓ in a row of initials, the way read receipts do in a messenger. The wallpaper is a cool grey, other people's messages are white bubbles, your own are solid ink, and the one thing that is about you right now, your number, is pinned in flat yellow above the thread.\n\nThe system is dense and operational, built for a thirty-second visit on a phone: one typeface with hierarchy carried by size and weight, tabular figures wherever money appears, lucide line icons, and color spent almost entirely on meaning (ink is you, yellow is your pin, brick red is still owed, leaf green is paid). Surfaces are flat tonal layers; the only depth is a hair of contact shadow under bubbles and the lift of a sheet.\n\nIt rejects the fintech balance card and the generic list-of-rows genre, and it fully replaces the earlier paper-ledger look of receipt paper and stamps. Nothing is ranked, decorated or celebrated. Motion exists only to report that a number or a status just changed.",
+    "keyCharacteristics": [
+      "Chat-thread grammar: date chips, bill bubbles with a sender-side tail corner, a monthly summary posted as a system message, a docked composer.",
+      "Cool grey wallpaper, white bubbles for others, ink bubbles for you, one flat yellow pin.",
+      "One face (Be Vietnam Pro), seven fixed rem sizes, tabular money.",
+      "Status is always triple-coded: word, icon, solid fill vs dashed outline.",
+      "Flat tonal depth with exactly two shadows.",
+      "Motion is state only: digits roll, ✓ pops.",
+      "Light and dark palettes mirror every role and both meet WCAG AA."
+    ],
+    "rules": [
+      { "name": "The One Source Rule", "body": "Colors are written only in `app/globals.css`, in OKLCH, with a `.dark` twin for every role. Components consume the generated utilities (`bg-wall`, `bg-mine`, `text-owe`, `border-line`…) and never contain a hex or `oklch()` literal.", "section": "colors" },
+      { "name": "The Ink Is Yours Rule", "body": "Ink (`mine`) means you: your own bill bubbles and the one primary action in a view (Pay, Save, the composer's send disc, an active chip). It is never a decorative band, a second primary or a header fill.", "section": "colors" },
+      { "name": "The Yellow Means Me Rule", "body": "Yellow belongs to the pin: the pinned bar with your number, your avatar, the \"bạn\" tag and text selection. Its one sanctioned echo is the \"Gần xong\" phase chip, which repeats the phase printed in the pinned bar. Nothing else is yellow.", "section": "colors" },
+      { "name": "The Never Color-Only Rule", "body": "Paid and owed always carry three layers: a word (\"Đã trả\" / \"Chưa trả\"), an icon (check vs dashed circle), and a shape (solid wash fill vs dashed outline). Red and green never carry status alone, in either theme.", "section": "colors" },
+      { "name": "The One Face Rule", "body": "Be Vietnam Pro for everything; hierarchy is size and weight only (400/500/600, with 700 reserved for the amount you have to pay). No second family, no display face, no mono, no italic emphasis.", "section": "typography" },
+      { "name": "The Tabular Money Rule", "body": "Every amount renders through `Money` or `.tnum` (tabular-nums, −0.01em tracking) and is formatted vi-VN (\"607.333đ\"), so money columns align and a rolling digit never nudges its neighbours.", "section": "typography" },
+      { "name": "The No Sideways Scroll Rule", "body": "The page never scrolls horizontally. Only chip rows (the name picker, the filters) scroll on x, edge to edge, with the scrollbar hidden.", "section": "layout" },
+      { "name": "The Contact-Shadow Rule", "body": "Exactly two shadows exist: the bubble contact shadow and the sheet lift. Panels, chips, the pinned bar, the composer and the month summary are flat; separation comes from tone steps and 1px hairlines. No glows, blurs or hard offset shadows.", "section": "elevation" },
+      { "name": "The Tail Corner Rule", "body": "A bill bubble has one 6px corner, bottom and on the sender's side (bottom-left for others, bottom-right for you); its other corners are 18px. No other component gets an asymmetric corner.", "section": "shapes" },
+      { "name": "The Dashed Means Not-Yet Rule", "body": "A 1px dashed outline means \"not yet\": unpaid initials, the \"Chưa trả\" mark, the empty QR slot. Never use dashes as decoration.", "section": "shapes" },
+      { "name": "The Fixed Label Grid Rule", "body": "Every bill bubble fills the same slots in the same order: category tile · title with category and split · total; a hairline; initials with ✓ badges · progress · time; then \"Phần của bạn\" when you take part. Add information by filling a slot, never by adding a new layout.", "section": "components" },
+      { "name": "The Ledger-Not-Leaderboard Rule", "body": "Members are grouped by state (Còn nợ, Đã trả xong, Người ứng tiền) and sorted by name with you first. Never sort by amount, badge the biggest debtor, or add medals and streaks.", "section": "components" },
+      { "name": "The One Overlay Rule", "body": "Every detail opens in `SheetShell`: a bottom sheet on mobile, a 440px right side sheet at ≥1024px. `AlertDialog` is only for confirming a destructive or bulk action.", "section": "components" },
+      { "name": "The State-Only Motion Rule", "body": "Two animations exist: the digit roll (420ms, cubic-bezier(0.3, 1.25, 0.5, 1), overshooting by one step and settling) on headline amounts when realtime data changes, and the tick pop (220ms, scale 0.4 → 1.18 → 1) on a ✓ badge that just turned paid. Progress widths ease over 500ms and hovers take 150ms. Nothing enters, fades or loops for decoration; `prefers-reduced-motion` collapses all of it and `Money` renders static text.", "section": "components" }
+    ],
+    "dos": [
+      "**Do** write every new color as an OKLCH token in `app/globals.css` with its `.dark` twin, and use it through the generated utilities.",
+      "**Do** render every amount through `Money` (tabular, vi-VN, e.g. 607.333đ); pass `animate` only to the one headline figure of a view.",
+      "**Do** mark paid/owed with `PaidMark` or the same three layers: word, check vs dashed-circle icon, wash fill vs dashed outline.",
+      "**Do** keep every tap target at least 44px (primary buttons 48px) and keep the 2px ink focus outline.",
+      "**Do** use lucide icons only: category marks at 1.75 stroke, UI icons at the default 2, heavier strokes only on the tiny ✓ badges so they survive at 10px.",
+      "**Do** chart category data as single-hue `ink-2` bars sorted by amount, labelled directly with name · count · amount · %, with text in text colors.",
+      "**Do** write interface copy in Vietnamese, short and friendly, the way friends text each other.",
+      "**Do** check both palettes: every pairing meets WCAG AA in light and in dark."
+    ],
+    "donts": [
+      "**Don't** add a second typeface, a display face or a system display font; hierarchy is size and weight.",
+      "**Don't** put eyebrow or kicker labels above headings; a heading stands alone and a count follows a middot (\"Còn nợ · 9\").",
+      "**Don't** build a hero-metric block or a fintech balance card; your number lives in the pinned bar and in sheets.",
+      "**Don't** rank, medal or spotlight members by how much they owe.",
+      "**Don't** use emoji or text glyphs as icons.",
+      "**Don't** use yellow for anything that is not the pin or \"me\", or ink for anything that is not yours or the primary action.",
+      "**Don't** use a multi-hue categorical palette, or color a label with its bar's color.",
+      "**Don't** add decorative motion: numbers roll instead of fading, and nothing enters with choreography.",
+      "**Don't** bring back the old paper-ledger devices (receipt paper, stamps) or add shadows beyond the two in Elevation & Depth.",
+      "**Don't** write hex or `oklch()` in JSX."
+    ]
+  }
+}

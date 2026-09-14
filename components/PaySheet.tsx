@@ -1,8 +1,11 @@
 "use client";
 
 import toast from "react-hot-toast";
+import { Copy, QrCode } from "lucide-react";
 import type { PaymentQR } from "@/types";
 import { money, plain } from "@/lib/ledgerSelectors";
+import { cn } from "@/lib/utils";
+import { btnPrimary } from "@/lib/styles";
 import SheetShell from "@/components/SheetShell";
 
 interface PaySheetProps {
@@ -14,7 +17,7 @@ interface PaySheetProps {
 }
 
 /**
- * Thay tab QR cũ. Sheet mang theo ĐÚNG số tiền và ĐÚNG người nhận,
+ * Sheet trả tiền mang theo ĐÚNG số tiền và ĐÚNG người nhận,
  * nên không ai phải nhớ con số khi mở app ngân hàng.
  */
 export default function PaySheet({
@@ -24,17 +27,17 @@ export default function PaySheet({
   payerName,
   paymentQR,
 }: PaySheetProps) {
-  const copy = () => {
+  const copy = (text: string, done: string) => {
     navigator.clipboard
-      .writeText(String(Math.round(amount)))
-      .then(() => toast.success(`Đã copy ${money(amount)}`))
+      .writeText(text)
+      .then(() => toast.success(done))
       .catch(() => toast.error("Không copy được — nhập tay giúp mình nhé"));
   };
 
   const rows = [
-    { label: "NGÂN HÀNG", value: paymentQR?.bankName, mono: false },
-    { label: "SỐ TÀI KHOẢN", value: paymentQR?.accountNumber, mono: true },
-    { label: "CHỦ TÀI KHOẢN", value: paymentQR?.accountName, mono: false },
+    { label: "Ngân hàng", value: paymentQR?.bankName, copyable: false },
+    { label: "Số tài khoản", value: paymentQR?.accountNumber, copyable: true },
+    { label: "Chủ tài khoản", value: paymentQR?.accountName, copyable: false },
   ].filter((r) => r.value);
 
   return (
@@ -43,66 +46,87 @@ export default function PaySheet({
       onClose={onClose}
       header={
         <div>
-          <div className="eyebrow">TRẢ CHO {payerName.toUpperCase()}</div>
-          <div className="tnum text-fig mt-1.5">{money(amount)}</div>
+          <h2 className="text-head font-semibold">Trả cho {payerName}</h2>
+          <p className="text-small text-ink-2 mt-0.5">
+            Quét mã trong app ngân hàng, hoặc chuyển theo số tài khoản.
+          </p>
         </div>
       }
       footer={
         <button
           type="button"
-          onClick={copy}
-          className="w-full min-h-[52px] border border-ink rounded-ctl
-                     font-mono text-[13px] tracking-[0.1em] hover:bg-paper-2 transition-colors"
+          onClick={() => copy(String(Math.round(amount)), `Đã copy ${money(amount)}`)}
+          className={cn(btnPrimary, "w-full tnum")}
         >
-          COPY SỐ TIỀN {plain(amount)}
+          <Copy aria-hidden className="w-[18px] h-[18px]" />
+          Copy số tiền {plain(amount)}
         </button>
       }
     >
-      <div className="rule-tear pt-5">
-        <div className="flex justify-center">
-          {paymentQR?.imageUrl ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
+      <div className="border-t border-line pt-4">
+        <p className="text-body text-ink-2">Số tiền</p>
+        <p className="text-hero font-bold tnum mt-0.5">{money(amount)}</p>
+      </div>
+
+      <div className="mt-5 flex justify-center">
+        {paymentQR?.imageUrl ? (
+          <div className="p-3 rounded-[16px] bg-qr border border-line">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={paymentQR.imageUrl}
-              alt="Mã QR chuyển khoản"
-              className="w-[200px] h-[200px] object-contain border border-rule-strong"
+              alt={`Mã QR chuyển khoản cho ${payerName}`}
+              className="w-[220px] h-[220px] object-contain"
             />
-          ) : (
-            <div
-              className="w-[200px] h-[200px] border border-rule-strong grid place-items-center
-                         text-center font-mono text-eyebrow text-ink-3 leading-relaxed"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(45deg, var(--paper-2) 0 8px, var(--paper) 8px 16px)",
-              }}
-            >
-              ẢNH QR
-              <br />
-              ADMIN TẢI LÊN
+          </div>
+        ) : (
+          <div className="w-[244px] min-h-[180px] rounded-[16px] border border-dashed border-line-strong grid place-items-center text-center px-6 py-6">
+            <div>
+              <QrCode aria-hidden className="w-8 h-8 text-ink-3 mx-auto" />
+              <p className="text-small text-ink-2 mt-2">
+                {payerName} chưa tải ảnh QR. Dùng số tài khoản bên dưới nhé.
+              </p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
 
-        <div className="mt-5">
+      {rows.length > 0 ? (
+        <dl className="mt-5">
           {rows.map((r) => (
             <div
               key={r.label}
-              className="flex items-center justify-between gap-3 py-3 border-t border-rule"
+              className="flex items-center justify-between gap-3 min-h-14 py-2 border-t border-line"
             >
-              <span className="font-mono text-eyebrow text-ink-2">{r.label}</span>
-              <span
-                className={`text-body font-medium text-right break-all ${r.mono ? "tnum" : ""}`}
-              >
-                {r.value}
-              </span>
+              <dt className="text-small text-ink-2">{r.label}</dt>
+              <dd className="flex items-center gap-1 min-w-0">
+                <span className={cn("text-body font-semibold text-right break-all", r.copyable && "tnum")}>
+                  {r.value}
+                </span>
+                {r.copyable && (
+                  <button
+                    type="button"
+                    onClick={() => copy(r.value!, "Đã copy số tài khoản")}
+                    aria-label="Copy số tài khoản"
+                    className="w-11 h-11 shrink-0 grid place-items-center rounded-full text-ink-2 hover:bg-wall-2 hover:text-ink"
+                  >
+                    <Copy aria-hidden className="w-4 h-4" />
+                  </button>
+                )}
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
+      ) : (
+        !paymentQR?.imageUrl && (
+          <p className="text-body text-ink-2 text-center mt-5">
+            Người ứng tiền chưa thiết lập thông tin chuyển khoản.
+          </p>
+        )
+      )}
 
-        <p className="text-[14px] text-ink-2 text-center mt-5">
-          Chuyển xong nhắn {payerName} một tiếng — chỉ admin tick được “đã trả”.
-        </p>
-      </div>
+      <p className="text-small text-ink-2 text-center mt-5">
+        Chuyển xong nhắn {payerName} một tiếng — chỉ người ứng tiền tick được “đã trả”.
+      </p>
     </SheetShell>
   );
 }

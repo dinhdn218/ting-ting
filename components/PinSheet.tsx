@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Delete } from "lucide-react";
 import SheetShell from "@/components/SheetShell";
 import { cn } from "@/lib/utils";
+import { field } from "@/lib/styles";
 
 interface PinSheetProps {
   open: boolean;
@@ -17,7 +19,7 @@ interface PinSheetProps {
 
 const LEN = 6;
 
-/** Thay AuthModal toàn màn hình. PIN là cửa vào chế độ ghi, không phải cổng chặn. */
+/** PIN là cửa vào chế độ ghi, không phải cổng chặn. */
 export default function PinSheet({
   open,
   onClose,
@@ -40,20 +42,16 @@ export default function PinSheet({
       setBusy(true);
       const ok = await onSubmit(next);
       setBusy(false);
-      if (ok) {
-        setPin("");
-      } else {
-        setError(true);
-        setPin("");
-      }
+      setPin("");
+      if (!ok) setError(true);
     }
   };
 
   const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
   const keyClass =
-    "min-h-[52px] border border-rule rounded-ctl font-mono text-[18px] " +
-    "text-ink hover:border-ink hover:bg-paper-2 transition-colors";
+    "min-h-14 rounded-ctl bg-bubble border border-line text-[22px] font-medium tnum " +
+    "text-ink transition-colors hover:bg-wall-2 active:bg-wall-2 disabled:opacity-40";
 
   return (
     <SheetShell
@@ -64,69 +62,55 @@ export default function PinSheet({
           <h2 className="text-head font-semibold">
             {isFirstTime ? "Tạo mã quản trị" : "Đăng nhập quản trị"}
           </h2>
-          <p className="text-body text-ink-2 mt-1.5 max-w-[38ch]">
+          <p className="text-body text-ink-2 mt-1 max-w-[38ch]">
             {isFirstTime
               ? "Đặt mã 6 số cho người giữ sổ. Người xem không cần mã này."
-              : "Chỉ cần khi bạn muốn thêm hoặc sửa khoản chi. Xem thì không cần."}
+              : "Chỉ cần khi bạn muốn ghi hoặc sửa khoản chi. Xem thì không cần."}
           </p>
         </div>
       }
     >
       {isFirstTime && (
-        <div className="border-t border-rule pt-4 mb-5">
-          <label
-            htmlFor="admin-name"
-            className="eyebrow block mb-2"
-          >
-            TÊN NGƯỜI ỨNG TIỀN
+        <div className="border-t border-line pt-4 mb-5">
+          <label htmlFor="admin-name" className="block text-small font-medium text-ink-2 mb-1.5">
+            Tên người ứng tiền
           </label>
-          <input
-            id="admin-name"
-            type="text"
-            value={adminName}
-            onChange={(e) => onAdminNameChange(e.target.value)}
-            placeholder="Minh"
-            className="w-full min-h-11 bg-transparent text-row outline-none
-                       border-b border-rule-strong focus:border-ink placeholder:text-ink-3"
-          />
+          <div className={field}>
+            <input
+              id="admin-name"
+              type="text"
+              value={adminName}
+              onChange={(e) => onAdminNameChange(e.target.value)}
+              placeholder="Minh"
+              className="w-full bg-transparent text-row outline-none"
+            />
+          </div>
         </div>
       )}
 
-      <div className="border-t border-rule pt-5">
-        <div className="flex gap-2">
+      <div className="border-t border-line pt-5">
+        <div className="flex gap-2" aria-label={`Đã nhập ${pin.length} trên ${LEN} số`}>
           {Array.from({ length: LEN }).map((_, i) => (
             <div
               key={i}
+              aria-hidden
               className={cn(
-                "flex-1 h-[54px] grid place-items-center border rounded-ctl",
-                "font-mono text-[20px] text-ink",
-                error
-                  ? "border-stamp"
-                  : i === pin.length
-                    ? "border-ink"
-                    : "border-rule",
+                "flex-1 h-14 grid place-items-center rounded-ctl border-2 bg-bubble transition-colors",
+                error ? "border-owe" : i === pin.length ? "border-ink" : "border-line",
               )}
             >
-              {i < pin.length ? "•" : ""}
+              {i < pin.length && <span className="w-3 h-3 rounded-full bg-ink" />}
             </div>
           ))}
         </div>
 
-        <div
-          aria-live="polite"
-          className="font-mono text-eyebrow text-stamp mt-3 min-h-4"
-        >
-          {error ? "PIN KHÔNG ĐÚNG — THỬ LẠI" : ""}
+        <div aria-live="polite" className="text-small font-medium text-owe mt-3 min-h-5">
+          {error ? "Mã PIN chưa đúng — thử lại nhé." : ""}
         </div>
 
-        <div className="grid grid-cols-3 gap-2 mt-4">
+        <div className="grid grid-cols-3 gap-2 mt-3">
           {keys.map((k) => (
-            <button
-              key={k}
-              type="button"
-              onClick={() => press(k)}
-              className={keyClass}
-            >
+            <button key={k} type="button" onClick={() => press(k)} disabled={busy} className={keyClass}>
               {k}
             </button>
           ))}
@@ -137,11 +121,11 @@ export default function PinSheet({
               setError(false);
             }}
             aria-label="Xóa hết"
-            className={cn(keyClass, "text-[12px] tracking-[0.1em]")}
+            className={cn(keyClass, "text-body font-semibold text-ink-2")}
           >
-            XÓA
+            Xóa
           </button>
-          <button type="button" onClick={() => press("0")} className={keyClass}>
+          <button type="button" onClick={() => press("0")} disabled={busy} className={keyClass}>
             0
           </button>
           <button
@@ -151,9 +135,9 @@ export default function PinSheet({
               setError(false);
             }}
             aria-label="Xóa một số"
-            className={keyClass}
+            className={cn(keyClass, "grid place-items-center")}
           >
-            ⌫
+            <Delete aria-hidden className="w-6 h-6" strokeWidth={1.75} />
           </button>
         </div>
       </div>

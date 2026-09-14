@@ -1,30 +1,36 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import type { Activity, ActivityCategory, PaymentQR, AdminConfig } from "@/types";
+import type { Activity, PaymentQR, AdminConfig } from "@/types";
 import * as firebaseService from "@/lib/firebaseService";
 import { hashPin, verifyPin } from "@/lib/securityUtils";
 import { getMe, setMe as persistMe } from "@/lib/identity";
 import {
+  EMPTY_FILTER,
   buildLedger,
   filterActivities,
-  monthGroups,
-  plain,
+  hasFilter,
+  localMonthKey,
+  threadMonths,
+  type ActivityFilter,
 } from "@/lib/ledgerSelectors";
+import { cn } from "@/lib/utils";
 
-import AppHeader from "@/components/AppHeader";
-import ActionBar from "@/components/ActionBar";
-import Ledger from "@/components/Ledger";
-import ActivityList from "@/components/ActivityList";
+import ChatHeader, { type Tab } from "@/components/ChatHeader";
+import PinnedBar from "@/components/PinnedBar";
+import FilterBar from "@/components/FilterBar";
+import Thread from "@/components/Thread";
+import Composer, { type ComposerKind } from "@/components/Composer";
+import MembersPanel from "@/components/MembersPanel";
+import EmptyThread from "@/components/EmptyThread";
+import ThreadSkeleton, { MembersSkeleton } from "@/components/ThreadSkeleton";
 import ActivitySheet from "@/components/ActivitySheet";
 import PaySheet from "@/components/PaySheet";
 import PersonSheet from "@/components/PersonSheet";
 import PinSheet from "@/components/PinSheet";
 import NotebookMenu from "@/components/NotebookMenu";
 import QuickSplitWidget from "@/components/QuickSplitWidget";
-import EmptyLedger from "@/components/EmptyLedger";
-import LedgerSkeleton from "@/components/LedgerSkeleton";
 
 type Sheet =
   | null
@@ -41,6 +47,7 @@ export default function Home() {
   const [paymentQR, setPaymentQR] = useState<PaymentQR | null>(null);
   const [adminConfig, setAdminConfig] = useState<AdminConfig | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [online, setOnline] = useState(true);
 
   /* ---- vai trò & danh tính ---------------------------------------------- */
   const [isAdmin, setIsAdmin] = useState(false);
@@ -48,13 +55,15 @@ export default function Home() {
   const [me, setMeState] = useState<string | null>(null);
 
   /* ---- điều hướng -------------------------------------------------------- */
-  const [tab, setTab] = useState<"so" | "hd">("so");
+  const [tab, setTab] = useState<Tab>("chat");
   const [sheet, setSheet] = useState<Sheet>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  /* ---- bộ lọc màn Hoạt động ---------------------------------------------- */
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<ActivityCategory | "all">("all");
+  /* ---- tìm & lọc trong luồng ---------------------------------------------- */
+  const [filter, setFilter] = useState<ActivityFilter>(EMPTY_FILTER);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const scroller = useRef<HTMLDivElement>(null);
 
   /* ---- khởi tạo ---------------------------------------------------------- */
   // localStorage và class .dark chỉ đọc được sau khi mount: đọc lúc render sẽ
@@ -62,10 +71,19 @@ export default function Home() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMeState(getMe());
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTheme(
-      document.documentElement.classList.contains("dark") ? "dark" : "light",
-    );
+    setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+  }, []);
+
+  // Trạng thái kết nối — hiện ở dòng phụ của header
+  useEffect(() => {
+    const apply = () => setOnline(navigator.onLine);
+    apply();
+    window.addEventListener("online", apply);
+    window.addEventListener("offline", apply);
+    return () => {
+      window.removeEventListener("online", apply);
+      window.removeEventListener("offline", apply);
+    };
   }, []);
 
   useEffect(() => {
@@ -95,7 +113,7 @@ export default function Home() {
     };
   }, []);
 
-  /* ---- giá trị dẫn xuất — một useMemo, không lưu trùng vào state --------- */
+  /* ---- giá trị dẫn xuất — useMemo, không lưu trùng vào state ------------- */
   const payerName = adminConfig?.name ?? adminName ?? "";
 
   const ledger = useMemo(
@@ -103,16 +121,32 @@ export default function Home() {
     [activities, payerName, me],
   );
 
-  const groups = useMemo(
-    () => monthGroups(filterActivities(activities, { query, category })),
-    [activities, query, category],
-  );
+  const filtered = useMemo(() => filterActivities(activities, filter), [activities, filter]);
+  const months = useMemo(() => threadMonths(filtered), [filtered]);
+  const filtering = hasFilter(filter);
+  const shownSum = useMemo(() => filtered.reduce((s, a) => s + a.totalAmount, 0), [filtered]);
+  const nowKey = useMemo(() => localMonthKey(new Date()), []);
 
   const roster = useMemo(() => {
     const s = new Set<string>();
     activities.forEach((a) => a.participants.forEach((p) => s.add(p.name)));
     return Array.from(s).sort();
   }, [activities]);
+
+  // Ảnh nhóm: người ứng tiền và chính bạn — không bao giờ là người nợ nhiều nhất
+  const headerNames = useMemo(() => {
+    // Ô vàng chỉ dành cho chính bạn: chưa chọn tên thì chỉ hiện người ứng tiền
+    const names = [payerName || "Sổ Chung"];
+    if (me && me !== payerName) names.push(me);
+    return names;
+  }, [payerName, me]);
+
+  // Luồng chat mở ở tin mới nhất (đáy); cuộn lại khi có khoản mới hoặc quay về tab
+  useEffect(() => {
+    if (!loaded) return;
+    const el = scroller.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [loaded, filtered.length, tab]);
 
   /* ---- theme -------------------------------------------------------------- */
   const toggleTheme = () => {
@@ -142,7 +176,7 @@ export default function Home() {
   const addActivity = async (activity: Activity) => {
     try {
       await firebaseService.addActivity(activity);
-      toast.success("Đã ghi vào sổ");
+      toast.success("Đã gửi vào nhóm");
     } catch {
       toast.error("Lỗi khi ghi khoản. Vui lòng thử lại!");
     }
@@ -248,134 +282,142 @@ export default function Home() {
     toast.success("Đã thoát quản trị");
   };
 
-  /* ---- thanh hành động: một nút, nhãn theo trạng thái --------------------- */
-  const action: { label: string; onClick: () => void; variant: "primary" | "outline" } =
-    isAdmin
+  /* ---- ô soạn tin = một hành động, theo trạng thái ------------------------ */
+  const composer: { kind: ComposerKind; label: string; onClick: () => void } = isAdmin
+    ? { kind: "compose", label: "Ghi khoản mới…", onClick: () => setSheet({ kind: "split" }) }
+    : !me
       ? {
-          label: "+ GHI KHOẢN MỚI",
-          onClick: () => setSheet({ kind: "split" }),
-          variant: "primary",
+          kind: "login",
+          label: "Người ứng tiền? Đăng nhập để ghi khoản",
+          onClick: () => setSheet({ kind: "pin" }),
         }
-      : !me
-        ? {
-            label: "ĐĂNG NHẬP QUẢN TRỊ",
-            onClick: () => setSheet({ kind: "pin" }),
-            variant: "outline",
-          }
-        : ledger.myOwed > 0 && !ledger.iAmPayer
-          ? {
-              label: `TRẢ ${plain(ledger.myOwed)}đ →`,
-              onClick: () => setSheet({ kind: "pay" }),
-              variant: "primary",
-            }
-          : {
-              label: "XEM QR CHUYỂN KHOẢN",
-              onClick: () => setSheet({ kind: "pay" }),
-              variant: "primary",
-            };
+      : // Người còn nợ đã có nút Trả mạnh trong tin ghim → ô đáy chỉ là lối phụ
+        { kind: "qr", label: "Xem QR chuyển khoản", onClick: () => setSheet({ kind: "pay" }) };
 
-  const openActivity = (activity: Activity) =>
-    setSheet({ kind: "activity", id: activity.id });
+  const openActivity = (activity: Activity) => setSheet({ kind: "activity", id: activity.id });
 
   const sheetActivity =
-    sheet?.kind === "activity"
-      ? (activities.find((a) => a.id === sheet.id) ?? null)
-      : null;
+    sheet?.kind === "activity" ? (activities.find((a) => a.id === sheet.id) ?? null) : null;
 
   const empty = loaded && activities.length === 0;
 
-  /* ---- các mảnh dùng chung cho cả mobile và desktop ------------------------ */
-  const ledgerPane = !loaded ? (
-    <LedgerSkeleton />
-  ) : empty ? (
-    <EmptyLedger isAdmin={isAdmin} onAdd={() => setSheet({ kind: "split" })} />
-  ) : (
-    <Ledger
-      ledger={ledger}
-      me={me}
-      isAdmin={isAdmin}
-      payerName={payerName}
-      onPickMe={pickMe}
-      onClearMe={clearMe}
-      onOpenPerson={(name) => setSheet({ kind: "person", name })}
-      onOpenActivity={openActivity}
-      onOpenPay={() => setSheet({ kind: "pay" })}
-      onGoActivities={() => setTab("hd")}
-    />
-  );
+  const openSearch = () => {
+    setTab("chat");
+    setSearchOpen((o) => {
+      if (o) setFilter(EMPTY_FILTER);
+      return !o;
+    });
+  };
 
-  const activityPane = (
-    <ActivityList
-      groups={groups}
-      all={activities}
-      query={query}
-      onQuery={setQuery}
-      category={category}
-      onCategory={setCategory}
-      onOpen={openActivity}
-    />
-  );
+  const closeSearch = () => {
+    setSearchOpen(false);
+    setFilter(EMPTY_FILTER);
+  };
 
   return (
-    <div className="relative z-10 min-h-dvh flex flex-col lg:bg-paper-2">
+    <div className="relative h-dvh flex flex-col bg-wall">
+      {/* Đáy màn, trên ô soạn tin — không che tên nhóm và trạng thái kết nối */}
       <Toaster
-        position="top-center"
+        position="bottom-center"
+        containerStyle={{ bottom: 88 }}
         toastOptions={{
           duration: 2600,
           style: {
-            background: "var(--ink)",
-            color: "var(--on-ink)",
-            borderRadius: "3px",
+            background: "var(--mine)",
+            color: "var(--on-mine)",
+            borderRadius: "12px",
             padding: "12px 16px",
-            fontSize: "14px",
+            fontSize: "15px",
           },
         }}
       />
 
-      <div className="flex-1 flex flex-col lg:max-w-[1160px] lg:w-full lg:mx-auto lg:bg-paper lg:border-x lg:border-rule-strong">
-        <AppHeader
-          count={activities.length}
-          isAdmin={isAdmin}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          onOpenMenu={() => setSheet({ kind: "menu" })}
-          tab={tab}
-          onTab={setTab}
-        />
+      <ChatHeader
+        names={headerNames}
+        memberCount={ledger.roster.length}
+        unsettled={ledger.peopleUnsettled}
+        isAdmin={isAdmin}
+        online={online}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onOpenMenu={() => setSheet({ kind: "menu" })}
+        onOpenSearch={openSearch}
+        searchActive={searchOpen}
+        tab={tab}
+        onTab={setTab}
+      />
 
-        {/* Mobile / tablet: một cột, đổi bằng segmented control */}
-        <main className="flex-1 overflow-y-auto lg:hidden">
-          <div className="mx-auto w-full max-w-[560px] border-x border-rule min-h-full">
-            {tab === "so" ? ledgerPane : activityPane}
-          </div>
-        </main>
+      <div className="flex-1 min-h-0 lg:grid lg:grid-cols-[380px_minmax(0,1fr)] xl:grid-cols-[420px_minmax(0,1fr)]">
+        {/* Thành viên — tab ở mobile, cột trái ở desktop */}
+        <aside
+          aria-label="Thành viên"
+          className={cn(
+            "h-full min-h-0 overflow-y-auto bg-panel lg:block lg:border-r lg:border-line",
+            tab === "members" ? "block" : "hidden",
+          )}
+        >
+          {!loaded ? (
+            <MembersSkeleton />
+          ) : (
+            <MembersPanel
+              ledger={ledger}
+              isAdmin={isAdmin}
+              activitiesCount={activities.length}
+              onOpenPerson={(name) => setSheet({ kind: "person", name })}
+            />
+          )}
+        </aside>
 
-        {/* Desktop ≥1024px: hai cột cùng lúc, không cần segmented control */}
-        <main className="hidden lg:grid flex-1 min-h-0 grid-cols-[560px_1fr]">
-          <div className="overflow-y-auto border-r border-rule-strong">
-            {ledgerPane}
-            {loaded && !empty && (
-              <div className="px-5 pb-6">
-                <ActionBar
-                  label={action.label}
-                  onClick={action.onClick}
-                  variant={action.variant}
-                  inline
-                />
-              </div>
+        {/* Trò chuyện */}
+        <section
+          aria-label="Trò chuyện"
+          className={cn("h-full min-h-0 flex-col lg:flex", tab === "chat" ? "flex" : "hidden")}
+        >
+          {loaded && !empty && (
+            <PinnedBar
+              ledger={ledger}
+              me={me}
+              payerName={payerName}
+              onPickMe={pickMe}
+              onPay={() => setSheet({ kind: "pay" })}
+              onOpenMe={() => me && setSheet({ kind: "person", name: me })}
+              onOpenMembers={() => setTab("members")}
+            />
+          )}
+
+          {searchOpen && (
+            <FilterBar
+              filter={filter}
+              onChange={setFilter}
+              onClose={closeSearch}
+              all={activities}
+              shownCount={filtered.length}
+              shownSum={shownSum}
+            />
+          )}
+
+          <div ref={scroller} className="flex-1 min-h-0 overflow-y-auto">
+            {!loaded ? (
+              <ThreadSkeleton />
+            ) : empty ? (
+              <EmptyThread isAdmin={isAdmin} onAdd={() => setSheet({ kind: "split" })} />
+            ) : (
+              <Thread
+                months={months}
+                me={me}
+                payerName={payerName}
+                onOpen={openActivity}
+                filtered={filtering}
+                onClearFilter={() => setFilter(EMPTY_FILTER)}
+                nowKey={nowKey}
+              />
             )}
           </div>
-          <div className="overflow-y-auto">{activityPane}</div>
-        </main>
-      </div>
 
-      {/* Thanh dưới = HÀNH ĐỘNG, không phải điều hướng. Ẩn ở desktop. */}
-      <div className="lg:hidden">
-        <ActionBar
-          label={action.label}
-          onClick={action.onClick}
-          variant={action.variant}
-        />
+          {loaded && (
+            <Composer kind={composer.kind} label={composer.label} onClick={composer.onClick} />
+          )}
+        </section>
       </div>
 
       {/* ---- Lớp phủ: Sheet cho mọi nội dung ---------------------------- */}
@@ -389,6 +431,7 @@ export default function Home() {
 
       <ActivitySheet
         activity={sheetActivity}
+        payerName={payerName}
         onClose={() => setSheet(null)}
         onToggle={togglePaid}
         onDelete={deleteActivity}
@@ -400,9 +443,11 @@ export default function Home() {
       <PersonSheet
         name={sheet?.kind === "person" ? sheet.name : null}
         activities={activities}
+        payerName={payerName}
         onClose={() => setSheet(null)}
         onOpenActivity={openActivity}
         onOpenPay={() => setSheet({ kind: "pay" })}
+        onToggle={togglePaid}
         onMarkAllPaid={markAllPaidForPerson}
         me={me}
         isAdmin={isAdmin}

@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { Sheet, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { iconBtn } from "@/lib/styles";
 
 interface SheetShellProps {
   open: boolean;
   onClose: () => void;
-  /** Tiêu đề trái — chuỗi hoặc JSX (header hoạt động có chữ ký danh mục) */
+  /** Tiêu đề trái — chuỗi hoặc JSX */
   header: React.ReactNode;
   children: React.ReactNode;
   /** Chân sheet dính đáy (các nút hành động) */
@@ -16,8 +18,8 @@ interface SheetShellProps {
 
 /**
  * Quy tắc lớp phủ duy nhất của app:
- * mobile = bottom sheet, desktop ≥1024px = side sheet phải rộng 420px.
- * AlertDialog chỉ dành cho xác nhận phá hủy.
+ * mobile = bottom sheet, desktop ≥1024px = side sheet phải rộng 440px.
+ * AlertDialog chỉ dành cho xác nhận.
  */
 export default function SheetShell({
   open,
@@ -42,32 +44,25 @@ export default function SheetShell({
         side={desktop ? "right" : "bottom"}
         showCloseButton={false}
         className={cn(
-          "bg-paper text-ink p-0 gap-0 border-rule-strong shadow-sheet",
-          desktop
-            ? "w-full sm:max-w-[420px] h-full"
-            : "max-h-[92%] rounded-t-sheet",
+          "bg-panel text-ink p-0 gap-0 border-line shadow-sheet",
+          desktop ? "w-full sm:max-w-[440px] h-full" : "max-h-[92dvh] rounded-t-sheet",
         )}
       >
         {!desktop && (
           <span
             aria-hidden
-            className="mx-auto mt-2 mb-3 block w-10 h-1 rounded-[2px] bg-rule-strong"
+            className="mx-auto mt-2 mb-1 block w-10 h-1 rounded-full bg-line-strong"
           />
         )}
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
-          <div className="px-5 pb-5">
-            <div className="flex items-start justify-between gap-3 pt-2 pb-4">
-              <div className="min-w-0">{header}</div>
+          <div className="px-5 pb-6">
+            <div className="flex items-start justify-between gap-3 pt-3 pb-4">
+              <div className="min-w-0 flex-1">{header}</div>
               <SheetClose
                 render={
-                  <button
-                    type="button"
-                    aria-label="Đóng"
-                    className="w-10 h-10 shrink-0 grid place-items-center border border-rule
-                               rounded-ctl text-ink-2 hover:border-ink transition-colors"
-                  >
-                    ✕
+                  <button type="button" aria-label="Đóng" className={cn(iconBtn, "-mr-2")}>
+                    <X className="w-5 h-5" aria-hidden />
                   </button>
                 }
               />
@@ -77,7 +72,7 @@ export default function SheetShell({
         </div>
 
         {footer && (
-          <div className="flex-none border-t border-rule-strong px-5 pt-3 pb-safe">
+          <div className="flex-none border-t border-line bg-panel px-5 pt-3 pb-safe">
             {footer}
           </div>
         )}

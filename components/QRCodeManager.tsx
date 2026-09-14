@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { QrCode, Trash2, Upload } from "lucide-react";
 import type { PaymentQR } from "@/types";
+import { cn } from "@/lib/utils";
+import { btnPrimary, field } from "@/lib/styles";
 
 interface QRCodeManagerProps {
   paymentQR: PaymentQR | null;
@@ -11,19 +14,13 @@ interface QRCodeManagerProps {
 }
 
 /**
- * Sống trong Sổ tay, không còn là một tab. Admin tải ảnh + nhập thông tin bank;
- * viewer chỉ đọc — cùng một component, hai trạng thái.
+ * Sống trong Tùy chọn. Admin tải ảnh + nhập thông tin ngân hàng;
+ * người xem chỉ đọc — cùng một component, hai trạng thái.
  */
-export default function QRCodeManager({
-  paymentQR,
-  onUpdate,
-  isAdmin,
-}: QRCodeManagerProps) {
+export default function QRCodeManager({ paymentQR, onUpdate, isAdmin }: QRCodeManagerProps) {
   const [imageUrl, setImageUrl] = useState(paymentQR?.imageUrl ?? "");
   const [bankName, setBankName] = useState(paymentQR?.bankName ?? "");
-  const [accountNumber, setAccountNumber] = useState(
-    paymentQR?.accountNumber ?? "",
-  );
+  const [accountNumber, setAccountNumber] = useState(paymentQR?.accountNumber ?? "");
   const [accountName, setAccountName] = useState(paymentQR?.accountName ?? "");
 
   // Firestore đẩy bản mới về → đồng bộ form ngay trong lúc render (không dùng
@@ -62,71 +59,56 @@ export default function QRCodeManager({
   const preview = (
     <div className="flex justify-center">
       {imageUrl ? (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
-          src={imageUrl}
-          alt="Mã QR chuyển khoản"
-          className="w-[200px] h-[200px] object-contain border border-rule-strong"
-        />
+        <div className="p-3 rounded-[16px] bg-qr border border-line">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={imageUrl} alt="Mã QR chuyển khoản" className="w-[200px] h-[200px] object-contain" />
+        </div>
       ) : (
-        <div
-          className="w-[200px] h-[200px] border border-rule-strong grid place-items-center
-                     text-center font-mono text-eyebrow text-ink-3 leading-relaxed"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, var(--paper-2) 0 8px, var(--paper) 8px 16px)",
-          }}
-        >
-          ẢNH QR
-          <br />
-          {isAdmin ? "CHƯA TẢI LÊN" : "ADMIN TẢI LÊN"}
+        <div className="w-[224px] h-[224px] rounded-[16px] border border-dashed border-line-strong grid place-items-center text-center px-6">
+          <div>
+            <QrCode aria-hidden className="w-8 h-8 text-ink-3 mx-auto" />
+            <p className="text-small text-ink-2 mt-2">
+              {isAdmin ? "Chưa có ảnh QR" : "Người ứng tiền chưa tải ảnh QR"}
+            </p>
+          </div>
         </div>
       )}
     </div>
   );
 
-  /* ---- Viewer: chỉ đọc ------------------------------------------------- */
+  /* ---- Người xem: chỉ đọc --------------------------------------------- */
   if (!isAdmin) {
     const rows = [
-      { label: "NGÂN HÀNG", value: paymentQR?.bankName, mono: false },
-      { label: "SỐ TÀI KHOẢN", value: paymentQR?.accountNumber, mono: true },
-      { label: "CHỦ TÀI KHOẢN", value: paymentQR?.accountName, mono: false },
+      { label: "Ngân hàng", value: paymentQR?.bankName, mono: false },
+      { label: "Số tài khoản", value: paymentQR?.accountNumber, mono: true },
+      { label: "Chủ tài khoản", value: paymentQR?.accountName, mono: false },
     ].filter((r) => r.value);
 
     return (
       <div>
         {preview}
         {rows.length > 0 ? (
-          <div className="mt-5">
+          <dl className="mt-5">
             {rows.map((r) => (
-              <div
-                key={r.label}
-                className="flex items-center justify-between gap-3 py-3 border-t border-rule"
-              >
-                <span className="font-mono text-eyebrow text-ink-2">
-                  {r.label}
-                </span>
-                <span
-                  className={`text-body font-medium text-right break-all ${
-                    r.mono ? "tnum" : ""
-                  }`}
-                >
+              <div key={r.label} className="flex items-center justify-between gap-3 py-3 border-t border-line">
+                <dt className="text-small text-ink-2">{r.label}</dt>
+                <dd className={cn("text-body font-semibold text-right break-all", r.mono && "tnum")}>
                   {r.value}
-                </span>
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
         ) : (
           <p className="text-body text-ink-2 text-center mt-5">
-            Admin chưa thiết lập thông tin chuyển khoản.
+            Người ứng tiền chưa thiết lập thông tin chuyển khoản.
           </p>
         )}
       </div>
     );
   }
 
-  /* ---- Admin: sửa được -------------------------------------------------- */
-  const field = (
+  /* ---- Admin: sửa được ------------------------------------------------ */
+  const input = (
     id: string,
     label: string,
     value: string,
@@ -134,21 +116,20 @@ export default function QRCodeManager({
     placeholder: string,
     mono = false,
   ) => (
-    <div className="py-3 border-t border-rule">
-      <label htmlFor={id} className="eyebrow block mb-1.5">
+    <div>
+      <label htmlFor={id} className="block text-small font-medium text-ink-2 mb-1.5">
         {label}
       </label>
-      <input
-        id={id}
-        type="text"
-        value={value}
-        onChange={(e) => set(e.target.value)}
-        placeholder={placeholder}
-        className={`w-full bg-transparent text-body outline-none py-1
-                    border-b border-rule-strong focus:border-ink placeholder:text-ink-3 ${
-                      mono ? "tnum" : ""
-                    }`}
-      />
+      <div className={field}>
+        <input
+          id={id}
+          type="text"
+          value={value}
+          onChange={(e) => set(e.target.value)}
+          placeholder={placeholder}
+          className={cn("w-full bg-transparent text-body outline-none", mono && "tnum")}
+        />
+      </div>
     </div>
   );
 
@@ -156,58 +137,37 @@ export default function QRCodeManager({
     <div>
       {preview}
 
-      <div className="flex gap-1.5 mt-4">
+      <div className="flex gap-2 mt-4">
         <label
-          className="flex-1 min-h-11 grid place-items-center border border-rule rounded-ctl
-                     font-mono text-[11px] tracking-[0.1em] text-ink-2 cursor-pointer
-                     hover:border-ink hover:text-ink transition-colors"
+          className="flex-1 inline-flex items-center justify-center gap-2 min-h-11 rounded-ctl border
+                     border-line-strong text-body font-medium text-ink cursor-pointer
+                     hover:bg-wall-2 transition-colors focus-within:ring-2 focus-within:ring-ink"
         >
-          {imageUrl ? "ĐỔI ẢNH QR" : "TẢI ẢNH QR"}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={upload}
-            className="sr-only"
-          />
+          <Upload aria-hidden className="w-4 h-4" />
+          {imageUrl ? "Đổi ảnh QR" : "Tải ảnh QR"}
+          <input type="file" accept="image/*" onChange={upload} className="sr-only" />
         </label>
         {imageUrl && (
           <button
             type="button"
             onClick={() => setImageUrl("")}
-            className="min-h-11 px-3 border border-stamp text-stamp rounded-ctl
-                       font-mono text-[11px] tracking-[0.1em] hover:bg-stamp-wash transition-colors"
+            className="inline-flex items-center gap-1.5 min-h-11 px-4 rounded-ctl border border-owe
+                       text-owe text-body font-medium hover:bg-owe-wash transition-colors"
           >
-            XÓA ẢNH
+            <Trash2 aria-hidden className="w-4 h-4" />
+            Xóa ảnh
           </button>
         )}
       </div>
 
-      <div className="mt-4">
-        {field("qr-bank", "NGÂN HÀNG", bankName, setBankName, "Vietcombank")}
-        {field(
-          "qr-number",
-          "SỐ TÀI KHOẢN",
-          accountNumber,
-          setAccountNumber,
-          "0011001234567",
-          true,
-        )}
-        {field(
-          "qr-owner",
-          "CHỦ TÀI KHOẢN",
-          accountName,
-          setAccountName,
-          "NGUYEN VAN MINH",
-        )}
+      <div className="mt-5 space-y-4">
+        {input("qr-bank", "Ngân hàng", bankName, setBankName, "Vietcombank")}
+        {input("qr-number", "Số tài khoản", accountNumber, setAccountNumber, "0011001234567", true)}
+        {input("qr-owner", "Chủ tài khoản", accountName, setAccountName, "NGUYEN VAN MINH")}
       </div>
 
-      <button
-        type="button"
-        onClick={save}
-        className="w-full mt-5 min-h-[52px] bg-ink text-on-ink rounded-ctl
-                   font-mono text-[13px] tracking-[0.1em] hover:opacity-90 transition-opacity"
-      >
-        LƯU THÔNG TIN
+      <button type="button" onClick={save} className={cn(btnPrimary, "w-full mt-6")}>
+        Lưu thông tin
       </button>
     </div>
   );

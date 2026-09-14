@@ -1,13 +1,10 @@
 /* =============================================================================
-   SỔ CHUNG — design tokens
+   SỔ CHUNG — design tokens · thế giới "Tin nhắn nhóm"
    app/globals.css · Tailwind v4 CSS-first (KHÔNG có tailwind.config.js)
    -----------------------------------------------------------------------------
-   Quy tắc bất di bất dịch: đây là NƠI DUY NHẤT được viết mã màu.
-   Trong TSX chỉ dùng utility sinh ra từ @theme inline:
-     text-ink / text-ink-2 / text-ink-3 / text-stamp / text-settled
-     bg-paper / bg-paper-2 / bg-ink / bg-stamp-wash / bg-settled-wash
-     border-rule / border-rule-strong / rounded-ctl / shadow-sheet
-   Không còn style={{ color: 'var(--credit)' }} hay 'oklch(...)' trong JSX.
+   Đây là NƠI DUY NHẤT được viết mã màu. Trong TSX chỉ dùng utility sinh ra
+   từ @theme inline: bg-wall / bg-bubble / bg-mine / bg-pin / text-owe /
+   text-paid / border-line … Không viết 'oklch(...)' hay hex trong JSX.
    ========================================================================== */
 
 @import "tailwindcss";
@@ -16,81 +13,113 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ---------- 1. Palette: light = giấy ngà --------------------------------- */
+/* ---------- 1. Palette sáng: tường chat xám lạnh ------------------------ */
 :root {
-  --paper:          oklch(0.982 0.006 84);   /* nền trang                    */
-  --paper-2:        oklch(0.952 0.010 84);   /* dải chìm, nền desk, skeleton */
-  --ink:            oklch(0.230 0.014 62);   /* chữ chính, nút primary       */
-  --ink-2:          oklch(0.500 0.014 66);   /* chữ phụ            AA 7.5:1  */
-  --ink-3:          oklch(0.620 0.012 72);   /* meta ≥13px         AA 4.6:1  */
-  --rule:           oklch(0.885 0.012 78);   /* kẻ giữa các dòng             */
-  --rule-strong:    oklch(0.780 0.014 78);   /* kẻ giữa các mục              */
-  --stamp:          oklch(0.550 0.130 28);   /* NỢ / tiền ra       AA 5.2:1  */
-  --settled:        oklch(0.550 0.130 150);  /* ĐÃ THU / tiền vào  AA 5.2:1  */
-  --stamp-wash:     oklch(0.940 0.030 30);   /* nền dòng "của bạn"           */
-  --settled-wash:   oklch(0.940 0.030 150);
-  --on-ink:         oklch(0.982 0.006 84);   /* chữ trên nền --ink           */
+  --wall:         oklch(0.952 0.006 250);  /* nền luồng trò chuyện          */
+  --wall-2:       oklch(0.918 0.008 250);  /* nhãn ngày, ô tìm, thanh trống */
+  --panel:        oklch(0.985 0.003 250);  /* cột thành viên, sheet         */
+  --bubble:       oklch(1 0 0);            /* tin người khác gửi            */
+  --mine:         oklch(0.215 0.012 260);  /* tin của chính bạn             */
+  --on-mine:      oklch(0.975 0.004 250);
+  --on-mine-2:    oklch(0.80 0.008 250);
 
-  --radius-ctl:   3px;    /* nút, input, chip                                */
-  --radius-sheet: 12px;   /* CHỈ mép trên của sheet                          */
-  --shadow-sheet: 0 -18px 40px oklch(0.230 0.014 62 / 0.14);
+  --ink:          oklch(0.205 0.012 260);  /* chữ chính                     */
+  --ink-2:        oklch(0.43 0.014 260);   /* chữ phụ          AA 8:1       */
+  --ink-3:        oklch(0.515 0.014 260);  /* meta ≥12px       AA 4.6:1     */
+  --line:         oklch(0.895 0.008 250);
+  --line-strong:  oklch(0.80 0.010 250);
 
-  /* --- shadcn/base-nova semantic tokens: map lên palette trên -----------
-     components/ui/* KHÔNG sửa, nên phải cấp đúng tên biến chúng đang đọc. */
-  --background:            var(--paper);
-  --foreground:            var(--ink);
-  --card:                  var(--paper);
-  --card-foreground:       var(--ink);
-  --popover:               var(--paper);
-  --popover-foreground:    var(--ink);
-  --primary:               var(--ink);
-  --primary-foreground:    var(--on-ink);
-  --secondary:             var(--paper-2);
-  --secondary-foreground:  var(--ink);
-  --muted:                 var(--paper-2);
-  --muted-foreground:      var(--ink-2);
-  --accent:                var(--paper-2);
-  --accent-foreground:     var(--ink);
-  --destructive:           var(--stamp);
-  --destructive-foreground: var(--on-ink);
-  --border:                var(--rule);
-  --input:                 var(--rule-strong);
-  --ring:                  var(--ink);
-  --radius:                var(--radius-ctl);
+  --pin:          oklch(0.894 0.157 91);   /* tin ghim vàng — #FFD84D       */
+  --pin-2:        oklch(0.80 0.15 85);     /* kẻ trong tin ghim             */
+  --on-pin:       oklch(0.205 0.012 260);
+  --on-pin-2:     oklch(0.36 0.04 80);     /* chữ phụ trên vàng  AA 7:1     */
+
+  --owe:          oklch(0.535 0.175 28);   /* còn nợ           AA 5.3:1     */
+  --owe-wash:     oklch(0.955 0.028 28);
+  --paid:         oklch(0.515 0.125 152);  /* đã trả           AA 5.2:1     */
+  --paid-wash:    oklch(0.952 0.035 152);
+
+  --radius-ctl:    12px;
+  --radius-bubble: 18px;
+  --radius-sheet:  20px;
+  --shadow-sheet:  0 -12px 40px oklch(0.2 0.02 260 / 0.14);
+  --shadow-bubble: 0 1px 2px oklch(0.2 0.02 260 / 0.08);
+
+  /* --- shadcn/base-nova semantic tokens: map lên palette trên --------- */
+  --background:             var(--panel);
+  --foreground:             var(--ink);
+  --card:                   var(--bubble);
+  --card-foreground:        var(--ink);
+  --popover:                var(--panel);
+  --popover-foreground:     var(--ink);
+  --primary:                var(--ink);
+  --primary-foreground:     var(--on-mine);
+  --secondary:              var(--wall-2);
+  --secondary-foreground:   var(--ink);
+  --muted:                  var(--wall-2);
+  --muted-foreground:       var(--ink-2);
+  --accent:                 var(--wall-2);
+  --accent-foreground:      var(--ink);
+  --destructive:            var(--owe);
+  --destructive-foreground: var(--on-mine);
+  --border:                 var(--line);
+  --input:                  var(--line-strong);
+  --ring:                   var(--ink);
+  --radius:                 var(--radius-ctl);
 }
 
-/* ---------- 2. Palette: dark = mực trên giấy tối ------------------------- */
+/* ---------- 2. Palette tối: đọc trên giường lúc khuya ------------------- */
 .dark {
-  --paper:          oklch(0.175 0.008 70);
-  --paper-2:        oklch(0.230 0.010 72);
-  --ink:            oklch(0.945 0.008 84);
-  --ink-2:          oklch(0.740 0.010 78);
-  --ink-3:          oklch(0.590 0.010 74);
-  --rule:           oklch(0.320 0.012 76);
-  --rule-strong:    oklch(0.420 0.014 76);
-  --stamp:          oklch(0.700 0.140 32);
-  --settled:        oklch(0.720 0.130 152);
-  --stamp-wash:     oklch(0.290 0.040 30);
-  --settled-wash:   oklch(0.290 0.040 150);
-  --on-ink:         oklch(0.175 0.008 70);
+  --wall:         oklch(0.165 0.008 260);
+  --wall-2:       oklch(0.235 0.010 260);
+  --panel:        oklch(0.195 0.009 260);
+  --bubble:       oklch(0.245 0.010 260);
+  --mine:         oklch(0.93 0.006 250);
+  --on-mine:      oklch(0.2 0.012 260);
+  --on-mine-2:    oklch(0.42 0.012 260);
 
-  --shadow-sheet: 0 -18px 40px oklch(0.100 0.008 70 / 0.5);
+  --ink:          oklch(0.955 0.005 250);
+  --ink-2:        oklch(0.79 0.010 250);
+  --ink-3:        oklch(0.68 0.012 250);
+  --line:         oklch(0.30 0.010 260);
+  --line-strong:  oklch(0.40 0.012 260);
+
+  --pin:          oklch(0.86 0.15 91);
+  --pin-2:        oklch(0.74 0.14 85);
+  --on-pin:       oklch(0.2 0.012 260);
+  --on-pin-2:     oklch(0.34 0.04 80);
+
+  --owe:          oklch(0.74 0.15 28);
+  --owe-wash:     oklch(0.29 0.05 28);
+  --paid:         oklch(0.76 0.13 152);
+  --paid-wash:    oklch(0.28 0.045 152);
+
+  --shadow-sheet:  0 -12px 40px oklch(0.05 0.01 260 / 0.55);
+  --shadow-bubble: 0 1px 2px oklch(0.05 0.01 260 / 0.4);
 }
 
 /* ---------- 3. Expose cho Tailwind -------------------------------------- */
 @theme inline {
-  --color-paper:        var(--paper);
-  --color-paper-2:      var(--paper-2);
-  --color-ink:          var(--ink);
-  --color-ink-2:        var(--ink-2);
-  --color-ink-3:        var(--ink-3);
-  --color-rule:         var(--rule);
-  --color-rule-strong:  var(--rule-strong);
-  --color-stamp:        var(--stamp);
-  --color-settled:      var(--settled);
-  --color-stamp-wash:   var(--stamp-wash);
-  --color-settled-wash: var(--settled-wash);
-  --color-on-ink:       var(--on-ink);
+  --color-wall:        var(--wall);
+  --color-wall-2:      var(--wall-2);
+  --color-panel:       var(--panel);
+  --color-bubble:      var(--bubble);
+  --color-mine:        var(--mine);
+  --color-on-mine:     var(--on-mine);
+  --color-on-mine-2:   var(--on-mine-2);
+  --color-ink:         var(--ink);
+  --color-ink-2:       var(--ink-2);
+  --color-ink-3:       var(--ink-3);
+  --color-line:        var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-pin:         var(--pin);
+  --color-pin-2:       var(--pin-2);
+  --color-on-pin:      var(--on-pin);
+  --color-on-pin-2:    var(--on-pin-2);
+  --color-owe:         var(--owe);
+  --color-owe-wash:    var(--owe-wash);
+  --color-paid:        var(--paid);
+  --color-paid-wash:   var(--paid-wash);
 
   --color-background:   var(--background);
   --color-foreground:   var(--foreground);
@@ -112,132 +141,122 @@
   --color-input:        var(--input);
   --color-ring:         var(--ring);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Nền cố định trắng sau ảnh QR — máy quét cần tương phản ở cả theme tối */
+  --color-qr: oklch(1 0 0);
 
-  --radius-ctl:   3px;
-  --radius-sheet: 12px;
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-sheet: var(--shadow-sheet);
+  --radius-ctl:    12px;
+  --radius-bubble: 18px;
+  --radius-sheet:  20px;
 
-  /* thang cỡ chữ — dùng text-fig-hero, text-fig, text-eyebrow… */
-  --text-eyebrow:      0.6875rem;  /* 11px  uppercase, tracking .16em      */
-  --text-eyebrow--line-height: 1.2;
-  --text-meta:         0.8125rem;  /* 13px  mono meta                       */
+  --shadow-sheet:  var(--shadow-sheet);
+  --shadow-bubble: var(--shadow-bubble);
+
+  /* Thang chữ Operate — tỉ lệ ~1.2, cố định rem, một mặt chữ */
+  --text-meta:          0.75rem;    /* 12px  giờ, nhãn phụ                 */
   --text-meta--line-height: 1.35;
-  --text-body:         0.9375rem;  /* 15px  nhỏ nhất cho câu                */
+  --text-small:         0.8125rem;  /* 13px  dòng meta của tin              */
+  --text-small--line-height: 1.4;
+  --text-body:          0.9375rem;  /* 15px  câu                            */
   --text-body--line-height: 1.5;
-  --text-row:          1.0625rem;  /* 17px  tên khoản / tên người           */
+  --text-row:           1.0625rem;  /* 17px  tên khoản / tên người          */
   --text-row--line-height: 1.35;
-  --text-head:         1.25rem;    /* 20px  tiêu đề sheet                   */
+  --text-head:          1.25rem;    /* 20px  tiêu đề sheet                  */
   --text-head--line-height: 1.3;
-  --text-screen:       1.625rem;   /* 26px  tên màn hình                    */
-  --text-screen--line-height: 1.2;
-  --text-fig:          2.125rem;   /* 34px  số phụ                          */
+  --text-fig:           1.75rem;    /* 28px  số tiền chủ đạo trong sheet    */
   --text-fig--line-height: 1.15;
-  --text-fig-hero:     2.75rem;    /* 44px  số chủ đạo                      */
-  --text-fig-hero--line-height: 1.15;
-
-  --tracking-eyebrow: 0.16em;
-  --tracking-fig: -0.035em;
+  --text-hero:          2.25rem;    /* 36px  số của bạn trong sheet trả     */
+  --text-hero--line-height: 1.1;
 }
 
 /* ---------- 4. Base ----------------------------------------------------- */
 @layer base {
-  * { @apply border-rule; }
+  * { @apply border-line; }
 
-  html { -webkit-text-size-adjust: 100%; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--line-strong) transparent;
+  }
 
   body {
-    @apply bg-paper text-ink font-sans antialiased;
+    @apply bg-wall text-ink font-sans antialiased;
     text-wrap: pretty;
     overflow-x: hidden;              /* không bao giờ có scroll ngang */
+    caret-color: var(--ink);
   }
 
-  /* Mọi con số tiền: mono + tabular để các cột thẳng hàng tuyệt đối */
+  /* Mọi con số tiền: tabular để các cột tiền thẳng hàng */
   .tnum,
   [data-fig] {
-    font-family: var(--font-mono), ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
+    font-feature-settings: "tnum" 1;
+    letter-spacing: -0.01em;
   }
 
-  /* Focus ring: mực, không dùng hue thứ ba → luôn đạt AA ở cả hai theme */
   :focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 2px;
-    border-radius: 1px;
   }
 
-  ::selection { background: var(--stamp-wash); color: var(--ink); }
+  ::selection { background: var(--pin); color: var(--on-pin); }
 
-  a { @apply text-stamp underline decoration-1 underline-offset-2; }
-  a:hover { @apply text-ink; }
+  a { @apply text-ink underline decoration-1 underline-offset-[3px]; }
+  a:hover { @apply decoration-2; }
 
   input, textarea, select, button { font: inherit; color: inherit; }
+  input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
+  input[type="date"] { color-scheme: light; }
+  .dark input[type="date"] { color-scheme: dark; }
 
   /* Vùng chạm tối thiểu 44px cho mọi control */
   button, [role="button"], a[role="button"] { min-height: 44px; }
+
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
 }
 
 /* ---------- 5. Utilities ------------------------------------------------ */
 @layer utilities {
-  /* Nhãn mục — dùng thay cho việc lặp 4 class mỗi lần */
-  .eyebrow {
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: var(--text-eyebrow);
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    @apply text-ink-2;
-  }
+  /* Bong bóng: góc đuôi phía người gửi nhỏ lại */
+  .bubble-in  { border-radius: var(--radius-bubble) var(--radius-bubble) var(--radius-bubble) 6px; }
+  .bubble-out { border-radius: var(--radius-bubble) var(--radius-bubble) 6px var(--radius-bubble); }
 
-  /* Con dấu ĐÃ TRẢ / CHƯA TRẢ — liền vs. gạch để không phụ thuộc màu */
-  .stamp-paid {
-    @apply text-settled border-settled;
-    border-width: 1.5px;
-    border-style: solid;
-  }
-  .stamp-unpaid {
-    @apply text-stamp border-stamp;
-    border-width: 1.5px;
-    border-style: dashed;
-  }
-
-  /* Kẻ đôi trước dòng tổng — chi tiết biên lai */
-  .rule-total { border-top: 3px double var(--rule-strong); }
-  .rule-tear  { border-top: 1px dashed var(--rule-strong); }
-
-  /* Kết cấu giấy: hiệu ứng nền DUY NHẤT của app (thay 4 blob animate cũ) */
-  .paper-grain {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    background-attachment: fixed;
-    opacity: 0.025;
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-  }
-
-  /* Safe-area iOS — giữ nguyên tên cũ, page đã dùng */
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
-  .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); }
+  .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); }
+
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
 }
 
-/* ---------- 6. Chuyển động --------------------------------------------- */
-@keyframes sheet-up { from { transform: translateY(101%); } to { transform: translateY(0); } }
-@keyframes scrim-in { from { opacity: 0; }              to { opacity: 1; } }
-@keyframes stamp-down {
-  0%   { transform: scale(1.35) rotate(-9deg); opacity: 0; }
-  60%  { transform: scale(0.96) rotate(-3deg); opacity: 1; }
-  100% { transform: scale(1) rotate(-3deg); }
+/* ---------- 6. Chuyển động — chỉ để báo trạng thái ----------------------- */
+
+/* Số tiền lăn từng chữ số: mỗi cột là một dải 0–9 dịch theo đúng nấc dòng,
+   vượt nhẹ một nấc rồi dừng. */
+.roll-digit {
+  display: inline-block;
+  height: 1em;
+  line-height: 1;
+  overflow: hidden;
+  vertical-align: -0.12em;
 }
+.roll-strip {
+  display: flex;
+  flex-direction: column;
+  /* Vượt đúng một nấc nhỏ rồi dừng — nhịp của dải chữ lật (direction contract) */
+  transition: transform 420ms cubic-bezier(0.3, 1.25, 0.5, 1);
+}
+.roll-strip > span { height: 1em; line-height: 1; }
 
-.anim-sheet { animation: sheet-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
-.anim-scrim { animation: scrim-in 180ms ease-out; }
-.anim-stamp { animation: stamp-down 180ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+/* ✓ bật lên khi admin tick đã trả */
+@keyframes tick-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.anim-tick { animation: tick-pop 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 
-/* GSAP: gọi useReducedMotion() (kèm trong bundle) để timeScale(0).
-   Đây là lớp bảo hiểm cho CSS animation. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -247,7 +266,7 @@
   }
 }
 
-/* ---------- 7. In (xuất biên lai giấy) ---------------------------------- */
+/* ---------- 7. In ------------------------------------------------------- */
 @media print {
   .no-print { display: none !important; }
   body { background: #fff; color: #000; }

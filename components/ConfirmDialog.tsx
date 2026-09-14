@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Info, Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,34 +32,39 @@ export default function ConfirmDialog({
   type = 'warning',
 }: ConfirmDialogProps) {
   const icons = {
-    danger: <XCircle className="w-5 h-5 text-destructive" />,
-    warning: <AlertTriangle className="w-5 h-5 text-stamp" />,
-    info: <Info className="w-5 h-5 text-primary" />,
-    success: <CheckCircle className="w-5 h-5 text-settled" />,
+    danger: <Trash2 className="w-5 h-5 text-owe" aria-hidden />,
+    warning: <AlertTriangle className="w-5 h-5 text-owe" aria-hidden />,
+    info: <Info className="w-5 h-5 text-ink-2" aria-hidden />,
+    success: <CheckCircle2 className="w-5 h-5 text-paid" aria-hidden />,
   };
 
   const actionClass = {
-    danger: 'bg-stamp hover:opacity-90 text-on-ink',
-    warning: 'bg-stamp hover:opacity-90 text-on-ink',
-    info: 'bg-primary hover:bg-primary/90 text-primary-foreground',
-    success: 'bg-settled hover:opacity-90 text-on-ink',
+    danger: 'bg-owe text-on-mine hover:opacity-90',
+    warning: 'bg-owe text-on-mine hover:opacity-90',
+    info: 'bg-mine text-on-mine hover:opacity-90',
+    success: 'bg-paid text-on-mine hover:opacity-90',
   };
 
   return (
     <AlertDialog open onOpenChange={(open) => { if (!open) onCancel(); }}>
-      <AlertDialogContent>
+      <AlertDialogContent className="bg-panel text-ink rounded-[20px]">
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2">
+          <AlertDialogTitle className="flex items-center gap-2 text-head font-semibold">
             {icons[type]}
             {title}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-sm leading-relaxed">
+          <AlertDialogDescription className="text-body text-ink-2 leading-relaxed">
             {message}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} className={actionClass[type]}>
+          <AlertDialogCancel onClick={onCancel} className="min-h-11 rounded-ctl">
+            {cancelText}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
+            className={`min-h-11 rounded-ctl font-semibold ${actionClass[type]}`}
+          >
             {confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
