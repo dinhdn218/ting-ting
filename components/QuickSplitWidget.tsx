@@ -507,7 +507,7 @@ export default function QuickSplitWidget({
         <div>
           <p className={label}>Xem trước tin sẽ gửi</p>
           <div className="rounded-[16px] bg-wall p-3">
-            <BillBubble activity={preview} me={payerName} payerName={payerName} />
+            <BillBubble activity={preview} me={null} payerName={payerName} />
           </div>
         </div>
       </div>

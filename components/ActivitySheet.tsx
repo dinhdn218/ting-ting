@@ -102,7 +102,7 @@ export default function ActivitySheet({
             <Money value={activity.totalAmount} className="text-fig font-semibold" />
           </div>
           <p className="text-small text-ink-3 mt-1">
-            {payerName || "Người ứng tiền"} đã ứng trước · chia cho{" "}
+            Chia cho{" "}
             {activity.participants.length} người
           </p>
         </div>

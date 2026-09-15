@@ -49,7 +49,7 @@ export default function MembersPanel({
 
   return (
     <div className="mx-auto w-full max-w-[640px] px-4 sm:px-5 pt-5 pb-10 space-y-8">
-      {/* Cả nhóm — một câu, một thanh, một nhãn pha */}
+      {/* Cả nhóm — thanh tiến độ + bảng kê kiểu sổ, số tiền căn phải thẳng cột */}
       <section aria-labelledby="group-h">
         <div className="flex items-center justify-between gap-3">
           <h2 id="group-h" className="text-head font-semibold">
@@ -70,24 +70,13 @@ export default function MembersPanel({
           </span>
         </div>
 
-        <p className="text-body text-ink-2 mt-1.5 tnum">
-          Đã thu <span className="text-ink font-semibold">{money(ledger.collected)}</span> trên
-          tổng {money(ledger.total)}
-          {ledger.outstanding > 0 && (
-            <>
-              {" "}· còn{" "}
-              <Money value={ledger.outstanding} animate className="text-owe font-semibold" />
-            </>
-          )}
-        </p>
-
         <div
           role="progressbar"
-          aria-label="Tỉ lệ đã thu"
+          aria-label={`Đã thu ${ledger.pct}%`}
           aria-valuenow={ledger.pct}
           aria-valuemin={0}
           aria-valuemax={100}
-          className="mt-3 flex gap-[2px] h-2"
+          className="mt-4 flex gap-[2px] h-2.5"
         >
           {ledger.pct > 0 && (
             <span
@@ -96,9 +85,37 @@ export default function MembersPanel({
             />
           )}
           {ledger.pct < 100 && (
-            <span className="block h-full flex-1 rounded-r-full bg-line-strong" />
+            <span className="block h-full flex-1 rounded-r-full bg-owe/35" />
           )}
         </div>
+
+        <dl className="mt-3">
+          <div className="flex items-baseline justify-between gap-3 py-1.5">
+            <dt className="flex items-center gap-2 text-body text-ink-2">
+              <span aria-hidden className="w-2.5 h-2.5 rounded-[3px] bg-paid" />
+              Đã thu
+              <span className="text-small text-ink-3 tnum">{ledger.pct}%</span>
+            </dt>
+            <dd className="text-row font-semibold text-paid">
+              <Money value={ledger.collected} animate />
+            </dd>
+          </div>
+          <div className="flex items-baseline justify-between gap-3 py-1.5">
+            <dt className="flex items-center gap-2 text-body text-ink-2">
+              <span aria-hidden className="w-2.5 h-2.5 rounded-[3px] bg-owe/35" />
+              Còn nợ
+            </dt>
+            <dd className="text-row font-semibold text-owe">
+              <Money value={ledger.outstanding} animate />
+            </dd>
+          </div>
+          <div className="flex items-baseline justify-between gap-3 mt-1 pt-2.5 border-t border-line">
+            <dt className="text-body text-ink-2 pl-[18px]">Tổng chi</dt>
+            <dd className="text-row font-semibold">
+              <Money value={ledger.total} />
+            </dd>
+          </div>
+        </dl>
 
         <p className="text-small text-ink-3 mt-3 tnum">
           {members} người · {settled.length} đã trả xong · {debtors.length} còn nợ ·{" "}
@@ -141,7 +158,7 @@ export default function MembersPanel({
       {payer && (
         <section aria-labelledby="payer-h">
           <h3 id="payer-h" className="text-row font-semibold">
-            Người ứng tiền
+            Người giữ sổ
           </h3>
           <ul className="mt-1">
             <MemberRow row={payer} onOpen={onOpenPerson} />
@@ -164,7 +181,7 @@ function MemberRow({ row, onOpen }: { row: PersonRow; onOpen: (name: string) => 
   const showProgress = !row.isPayer && !row.settled && row.shareTotal > 0;
 
   const sub = row.isPayer
-    ? "Ứng tiền cho cả nhóm · còn phải thu"
+    ? "Giữ sổ · còn phải thu"
     : row.settled
       ? `${row.totalCount}/${row.totalCount} khoản · ${money(row.shareTotal)}`
       : `${row.unpaidCount} khoản chưa trả`;

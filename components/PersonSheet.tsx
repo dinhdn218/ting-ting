@@ -16,7 +16,6 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 interface PersonSheetProps {
   name: string | null;
   activities: Activity[];
-  payerName: string;
   onClose: () => void;
   onOpenActivity: (activity: Activity) => void;
   onOpenPay: () => void;
@@ -31,7 +30,6 @@ interface PersonSheetProps {
 export default function PersonSheet({
   name,
   activities,
-  payerName,
   onClose,
   onOpenActivity,
   onOpenPay,
@@ -69,7 +67,7 @@ export default function PersonSheet({
                 {isMe && <span className="text-ink-3 font-normal"> · bạn</span>}
               </h2>
               <p className="text-small text-ink-2 mt-0.5 tnum">
-                {isPayer ? "Người ứng tiền · " : ""}
+                {isPayer ? "Người giữ sổ · " : ""}
                 {counts.total} khoản tham gia
               </p>
             </div>
@@ -79,7 +77,7 @@ export default function PersonSheet({
           isMe && owed > 0 && !isPayer ? (
             <button type="button" onClick={onOpenPay} className={cn(btnPrimary, "w-full tnum")}>
               <QrCode aria-hidden className="w-[18px] h-[18px]" />
-              Trả {payerName} {money(owed)}
+              Trả {money(owed)}
             </button>
           ) : isAdmin && owed > 0 ? (
             <button

@@ -12,27 +12,23 @@ interface PaySheetProps {
   open: boolean;
   onClose: () => void;
   amount: number;
-  payerName: string;
   paymentQR: PaymentQR | null;
 }
 
 /**
- * Sheet trả tiền mang theo ĐÚNG số tiền và ĐÚNG người nhận,
+ * Sheet trả tiền mang theo ĐÚNG số tiền và thông tin chuyển khoản,
  * nên không ai phải nhớ con số khi mở app ngân hàng.
+ * Người nhận là chủ tài khoản trong QR — không còn "người ứng tiền" riêng.
  */
-export default function PaySheet({
-  open,
-  onClose,
-  amount,
-  payerName,
-  paymentQR,
-}: PaySheetProps) {
+export default function PaySheet({ open, onClose, amount, paymentQR }: PaySheetProps) {
   const copy = (text: string, done: string) => {
     navigator.clipboard
       .writeText(text)
       .then(() => toast.success(done))
       .catch(() => toast.error("Không copy được — nhập tay giúp mình nhé"));
   };
+
+  const receiver = paymentQR?.accountName?.trim();
 
   const rows = [
     { label: "Ngân hàng", value: paymentQR?.bankName, copyable: false },
@@ -46,9 +42,10 @@ export default function PaySheet({
       onClose={onClose}
       header={
         <div>
-          <h2 className="text-head font-semibold">Trả cho {payerName}</h2>
+          <h2 className="text-head font-semibold">Chuyển khoản</h2>
           <p className="text-small text-ink-2 mt-0.5">
-            Quét mã trong app ngân hàng, hoặc chuyển theo số tài khoản.
+            {receiver ? `Cho ${receiver} · ` : ""}quét mã trong app ngân hàng, hoặc chuyển theo số
+            tài khoản.
           </p>
         </div>
       }
@@ -74,7 +71,7 @@ export default function PaySheet({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={paymentQR.imageUrl}
-              alt={`Mã QR chuyển khoản cho ${payerName}`}
+              alt={receiver ? `Mã QR chuyển khoản cho ${receiver}` : "Mã QR chuyển khoản"}
               className="w-[220px] h-[220px] object-contain"
             />
           </div>
@@ -83,7 +80,7 @@ export default function PaySheet({
             <div>
               <QrCode aria-hidden className="w-8 h-8 text-ink-3 mx-auto" />
               <p className="text-small text-ink-2 mt-2">
-                {payerName} chưa tải ảnh QR. Dùng số tài khoản bên dưới nhé.
+                Chưa có ảnh QR. Dùng số tài khoản bên dưới nhé.
               </p>
             </div>
           </div>
@@ -119,13 +116,13 @@ export default function PaySheet({
       ) : (
         !paymentQR?.imageUrl && (
           <p className="text-body text-ink-2 text-center mt-5">
-            Người ứng tiền chưa thiết lập thông tin chuyển khoản.
+            Chưa có thông tin chuyển khoản.
           </p>
         )
       )}
 
       <p className="text-small text-ink-2 text-center mt-5">
-        Chuyển xong nhắn {payerName} một tiếng — chỉ người ứng tiền tick được “đã trả”.
+        Chuyển xong nhắn vào nhóm một tiếng để được tick “đã trả”.
       </p>
     </SheetShell>
   );

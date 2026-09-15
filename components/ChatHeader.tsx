@@ -3,12 +3,14 @@
 import { EllipsisVertical, Moon, Search, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { iconBtn } from "@/lib/styles";
-import { AvatarStack } from "@/components/Avatar";
+import Avatar from "@/components/Avatar";
+import AppLogo from "@/components/AppLogo";
 
 export type Tab = "chat" | "members";
 
 interface ChatHeaderProps {
-  names: string[];
+  /** Tên đã chọn trên máy này — hiện chữ tắt vàng chéo góc logo */
+  me: string | null;
   memberCount: number;
   unsettled: number;
   isAdmin: boolean;
@@ -22,9 +24,9 @@ interface ChatHeaderProps {
   onTab: (tab: Tab) => void;
 }
 
-/** Header nhóm chat: ảnh nhóm, tên, dòng phụ "ai còn nợ", và hai tab ở mobile. */
+/** Header nhóm chat: logo Ting Ting, tên, dòng phụ "ai còn nợ", và hai tab ở mobile. */
 export default function ChatHeader({
-  names,
+  me,
   memberCount,
   unsettled,
   isAdmin,
@@ -68,7 +70,22 @@ export default function ChatHeader({
           className="flex items-center gap-3 min-w-0 flex-1 text-left rounded-ctl"
           aria-label={`Ting Ting, ${memberCount} người, ${unsettled} người còn nợ. Xem thành viên`}
         >
-          <AvatarStack names={names} />
+          {/* Logo giống favicon; đã chọn tên thì chữ tắt vàng của bạn nằm chéo góc */}
+          <span aria-hidden className="relative block w-11 h-11 shrink-0">
+            {me ? (
+              <>
+                <AppLogo className="absolute left-0 top-0 w-[34px] h-[34px]" />
+                <Avatar
+                  name={me}
+                  size="xs"
+                  tone="me"
+                  className="absolute -right-0.5 -bottom-0.5 w-[22px] h-[22px] text-[9px] ring-2 ring-panel"
+                />
+              </>
+            ) : (
+              <AppLogo className="w-11 h-11" />
+            )}
+          </span>
           <span className="min-w-0">
             <span className="block text-row font-semibold leading-tight truncate">
               Ting Ting

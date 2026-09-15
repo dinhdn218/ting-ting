@@ -5,17 +5,15 @@ import { Check, CheckCheck } from "lucide-react";
 import type { Activity } from "@/types";
 import { shareOf, cn } from "@/lib/utils";
 import { activityDue, activityRow, initials, money, splitLabel } from "@/lib/ledgerSelectors";
-import Avatar from "@/components/Avatar";
 import CategoryMark, { labelOf } from "@/components/CategoryMark";
 import Money from "@/components/Money";
 
 interface BillBubbleProps {
   activity: Activity;
   me: string | null;
+  /** Tên người nhận tiền trong cài đặt — chỉ để biết tin nào là "của bạn" */
   payerName: string;
   onOpen?: () => void;
-  /** Hiện "Minh đã ứng" ở tin đầu tiên của ngày */
-  showSender?: boolean;
 }
 
 const MAX_CHIPS = 7;
@@ -27,18 +25,11 @@ function timeOf(iso: string): string {
 }
 
 /**
- * Một khoản chi = một tin hóa đơn do người ứng tiền gửi.
+ * Một khoản chi = một tin hóa đơn trong luồng của nhóm.
  * Lưới nhãn cố định: danh mục · tên · tổng / loại · cách chia /
  * hàng chữ tắt có ✓ như dấu đã xem · tiến độ · giờ / phần của bạn.
- * Nếu bạn chính là người ứng tiền, tin nằm bên phải, nền mực.
  */
-export default function BillBubble({
-  activity,
-  me,
-  payerName,
-  onOpen,
-  showSender,
-}: BillBubbleProps) {
+export default function BillBubble({ activity, me, payerName, onOpen }: BillBubbleProps) {
   const mine = !!me && me === payerName;
   const row = activityRow(activity);
   const n = activity.participants.length;
@@ -62,12 +53,6 @@ export default function BillBubble({
 
   const body = (
     <>
-      {!mine && showSender && (
-        <span className="block text-meta font-semibold text-ink-2 mb-1.5">
-          {payerName || "Người ứng tiền"} đã ứng
-        </span>
-      )}
-
       <span className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-x-3 items-start">
         <CategoryMark category={activity.category} size={36} tone={mine ? "mine" : "default"} />
         <span className="min-w-0">
@@ -184,15 +169,7 @@ export default function BillBubble({
   );
 
   return (
-    <div className={cn("flex items-end gap-2", mine ? "justify-end" : "justify-start")}>
-      {!mine && (
-        <Avatar
-          name={payerName || "?"}
-          tone="payer"
-          size="sm"
-          className={cn("mb-0.5", !showSender && "invisible")}
-        />
-      )}
+    <div className={cn("flex", mine ? "justify-end" : "justify-start")}>
       {onOpen ? (
         <button type="button" onClick={onOpen} className={shell}>
           {body}

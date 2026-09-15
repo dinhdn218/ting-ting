@@ -17,7 +17,7 @@ export default function EmptyThread({ isAdmin, onAdd }: EmptyThreadProps) {
         <BookOpen aria-hidden className="w-6 h-6 text-ink-3 mx-auto" />
         <h2 className="text-row font-semibold mt-2">Nhóm chưa có khoản nào</h2>
         <p className="text-body text-ink-2 mt-1.5">
-          Mỗi khoản người ứng tiền ghi sẽ hiện ở đây như một tin nhắn. Cả nhóm mở link là thấy,
+          Mỗi khoản được ghi sẽ hiện ở đây như một tin nhắn. Cả nhóm mở link là thấy,
           không cần đăng nhập.
         </p>
         {isAdmin && (

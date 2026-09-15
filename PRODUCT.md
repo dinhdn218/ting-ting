@@ -9,7 +9,7 @@ web
 ## Users
 
 - **Thành viên nhóm** (đa số): nhóm bạn hoặc đồng nghiệp nhỏ, khoảng 5–20 người. Họ mở link từ Zalo/Messenger trên điện thoại, không đăng nhập, chọn "Bạn là ai" rồi xem mình còn nợ bao nhiêu và quét QR để chuyển khoản. Mỗi lần mở chỉ vài chục giây.
-- **Người ứng tiền / admin** (một người): trả trước cho cả nhóm, ghi các khoản chi, tick ai đã trả, quản lý ảnh QR và thông tin ngân hàng. Dùng mã PIN.
+- **Người giữ sổ — Định** (một người): ghi các khoản chi, tick ai đã trả, quản lý ảnh QR và thông tin ngân hàng; vào chế độ quản trị bằng mã PIN. Định cũng là một thành viên trong danh sách chia như mọi người. App không hiển thị "người ứng tiền" hay "Admin" ở đâu cả (người dùng chọn, 15/9/2026).
 
 ## Product Purpose
 
@@ -30,12 +30,12 @@ Chỉ có một người nhận tiền và các thành viên không cần tài k
 
 Chức năng đã có (redesign phải giữ đủ, không thêm hay bớt tính năng):
 
-- Sổ: số tiền của "tôi" (nợ / phải thu / đã xong), tổng nhóm (tổng chi, đã thu, còn nợ, % đã thu), danh sách "ai nợ ai" (người ứng tiền luôn ở cuối), ghi chép gần đây.
+- Sổ: số tiền của "tôi" (nợ / phải thu / đã xong), tổng nhóm (tổng chi, đã thu, còn nợ, % đã thu), danh sách "ai nợ ai" (người nợ nhiều lên trước), ghi chép gần đây.
 - Hoạt động: danh sách nhóm theo tháng kèm tổng tháng, tìm theo tên khoản hoặc tên người, lọc theo danh mục.
 - Chi tiết khoản: phần của từng người, tick đã trả (admin), xóa khoản có xác nhận (admin), trả phần của mình.
 - Chi tiết người: tổng còn nợ, từng khoản kèm trạng thái, tick đã trả tất cả (admin), trả ngay (chính mình).
 - Trả tiền: ảnh QR, ngân hàng, số tài khoản, chủ tài khoản, copy số tiền.
-- Ghi khoản mới: số tiền (nút +50K/+100K/+500K), nội dung (gợi ý từ khoản cũ), thời gian diễn ra, 6 danh mục, 3 cách chia, tìm/thêm người, dòng "còn lại chưa chia". Người ứng tiền không tự được thêm vào danh sách chia. Khi Định (người ghi sổ) có trong danh sách chia, phần của Định được tick "đã trả" sẵn lúc lưu; người khác thì không (người dùng chọn, 15/9/2026).
+- Ghi khoản mới: số tiền (nút +50K/+100K/+500K), nội dung (gợi ý từ khoản cũ), thời gian diễn ra, 6 danh mục, 3 cách chia, tìm/thêm người, dòng "còn lại chưa chia". Không ai tự nằm sẵn trong danh sách chia. Khi Định (người ghi sổ) có trong danh sách chia, phần của Định được tick "đã trả" sẵn lúc lưu; người khác thì không (người dùng chọn, 15/9/2026).
 - Quản trị: PIN được hash, tự nâng cấp PIN plaintext cũ, lần đầu tạo admin; quản lý QR; xuất Excel / CSV / JSON (chỉ khoản chưa trả).
 - Sáng / tối, lưu trên máy.
 
@@ -47,7 +47,7 @@ Chức năng đã có (redesign phải giữ đủ, không thêm hay bớt tính
 - Lọc hoạt động theo trạng thái đã trả / chưa trả và theo ngày, hiện các bộ lọc đang bật (`components/SearchFilter.tsx`).
 - Tóm tắt nhanh ai đang còn nợ (chuông đếm số người, `components/TopBar.tsx`) và trạng thái kết nối.
 
-Ràng buộc kỹ thuật: Next.js 16 App Router, React 19, Tailwind v4 (CSS-first, không có tailwind.config), shadcn/base-ui trong `components/ui/`, GSAP, Firebase Firestore. Mọi số tiền phải đi qua `shareOf()` / `lib/ledgerSelectors.ts`; không bao giờ tính bằng `totalAmount / participants.length`. Mô hình dữ liệu Firestore giữ nguyên. Chỉ có một admin và một người nhận tiền. Chưa có chức năng sửa khoản đã ghi hay chọn ngày khi ghi khoản (ngày = lúc lưu).
+Ràng buộc kỹ thuật: Next.js 16 App Router, React 19, Tailwind v4 (CSS-first, không có tailwind.config), shadcn/base-ui trong `components/ui/`, GSAP, Firebase Firestore. Mọi số tiền phải đi qua `shareOf()` / `lib/ledgerSelectors.ts`; không bao giờ tính bằng `totalAmount / participants.length`. Mô hình dữ liệu Firestore giữ nguyên. Chỉ có một người giữ sổ (chế độ quản trị) và một tài khoản nhận tiền (thông tin trong QR). Chưa có chức năng sửa khoản đã ghi.
 
 ## Brand Commitments
 

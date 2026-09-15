@@ -8,7 +8,6 @@ import Money from "@/components/Money";
 interface PinnedBarProps {
   ledger: Ledger;
   me: string | null;
-  payerName: string;
   onPickMe: (name: string) => void;
   /** Mở sheet chọn tên đầy đủ (tìm được, cuộn được hết) */
   onOpenWho: () => void;
@@ -35,7 +34,6 @@ const nameChip =
 export default function PinnedBar({
   ledger,
   me,
-  payerName,
   onPickMe,
   onOpenWho,
   onPay,
@@ -111,7 +109,7 @@ export default function PinnedBar({
                   {ledger.iAmPayer
                     ? `${me} · bạn còn phải thu`
                     : iOwe
-                      ? `${me} · còn nợ ${payerName} · ${ledger.myCounts.unpaid} khoản`
+                      ? `${me} · còn nợ ${ledger.myCounts.unpaid} khoản`
                       : `${me} · đã trả xong ${ledger.myCounts.total} khoản`}
                 </span>
                 <button

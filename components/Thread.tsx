@@ -23,8 +23,8 @@ interface ThreadProps {
 }
 
 /**
- * Luồng trò chuyện: cũ ở trên, mới ở dưới. Khoản chi luôn ở bên trái (tin
- * người ứng tiền gửi), tổng kết tháng ở bên phải như tin trả lời của app.
+ * Luồng trò chuyện: cũ ở trên, mới ở dưới. Khoản chi luôn ở bên trái,
+ * tổng kết tháng ở bên phải như tin trả lời của app.
  * Desktop: hai cột — khoản chi trái, tổng kết dính ở cột phải khi cuộn qua tháng đó.
  */
 export default function Thread({
@@ -76,14 +76,13 @@ export default function Thread({
                     {d.label}
                   </span>
                 </div>
-                {d.rows.map((r, i) => (
+                {d.rows.map((r) => (
                   <BillBubble
                     key={r.activity.id}
                     activity={r.activity}
                     me={me}
                     payerName={payerName}
                     onOpen={() => onOpen(r.activity)}
-                    showSender={i === 0}
                   />
                 ))}
               </Fragment>

@@ -116,6 +116,8 @@ export default function Home() {
   }, []);
 
   /* ---- giá trị dẫn xuất — useMemo, không lưu trùng vào state ------------- */
+  // Tên trong cài đặt quản trị. Không hiển thị ở đâu nữa (app không còn
+  // "người ứng tiền"); chỉ dùng nội bộ cho các phép tính của ledger.
   const payerName = adminConfig?.name ?? adminName ?? "";
 
   const ledger = useMemo(
@@ -149,13 +151,6 @@ export default function Home() {
     }
     return out;
   }, [activities]);
-
-  // Ảnh nhóm: người ứng tiền và chính bạn — ô vàng chỉ dành cho bạn
-  const headerNames = useMemo(() => {
-    const names = [payerName || "Ting Ting"];
-    if (me && me !== payerName) names.push(me);
-    return names;
-  }, [payerName, me]);
 
   // Luồng chat mở ở tin mới nhất (đáy); cuộn lại khi có khoản mới hoặc quay về tab
   useEffect(() => {
@@ -265,7 +260,7 @@ export default function Home() {
         setIsAdmin(true);
         setAdminName(newConfig.name);
         setSheet(null);
-        toast.success(`Chào ${newConfig.name} — sổ đã sẵn sàng`);
+        toast.success("Sổ đã sẵn sàng — đã vào chế độ quản trị");
         return true;
       } catch {
         toast.error("Lỗi khi tạo tài khoản!");
@@ -280,9 +275,9 @@ export default function Home() {
       const updatedConfig = { ...adminConfig, pin: hashedPin };
       await firebaseService.saveAdminConfig(updatedConfig);
       setAdminConfig(updatedConfig);
-      toast.success(`Chào ${adminConfig.name} (PIN đã được nâng cấp bảo mật)`);
+      toast.success("Đã vào chế độ quản trị (PIN đã được nâng cấp bảo mật)");
     } else if (isValid) {
-      toast.success(`Chào ${adminConfig.name}`);
+      toast.success("Đã vào chế độ quản trị");
     }
 
     if (isValid) {
@@ -304,7 +299,7 @@ export default function Home() {
     : !me
       ? {
           kind: "login",
-          label: "Người ứng tiền? Đăng nhập để ghi khoản",
+          label: "Người giữ sổ? Đăng nhập để ghi khoản",
           onClick: () => setSheet({ kind: "pin" }),
         }
       : // Người còn nợ đã có nút Trả mạnh trong tin ghim → ô đáy chỉ là lối phụ
@@ -349,7 +344,7 @@ export default function Home() {
       />
 
       <ChatHeader
-        names={headerNames}
+        me={me}
         memberCount={ledger.roster.length}
         unsettled={ledger.peopleUnsettled}
         isAdmin={isAdmin}
@@ -393,7 +388,6 @@ export default function Home() {
             <PinnedBar
               ledger={ledger}
               me={me}
-              payerName={payerName}
               onPickMe={pickMe}
               onOpenWho={() => setSheet({ kind: "who" })}
               onPay={() => setSheet({ kind: "pay" })}
@@ -442,7 +436,6 @@ export default function Home() {
         open={sheet?.kind === "pay"}
         onClose={() => setSheet(null)}
         amount={ledger.payTarget}
-        payerName={payerName || "người ứng tiền"}
         paymentQR={paymentQR}
       />
 
@@ -460,7 +453,6 @@ export default function Home() {
       <PersonSheet
         name={sheet?.kind === "person" ? sheet.name : null}
         activities={activities}
-        payerName={payerName}
         onClose={() => setSheet(null)}
         onOpenActivity={openActivity}
         onOpenPay={() => setSheet({ kind: "pay" })}

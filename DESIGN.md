@@ -223,7 +223,7 @@ components:
 
 **Creative North Star: "The Group Chat That Keeps the Math"**
 
-Ting Ting is the group's own chat thread, one that happens to keep the books. Every expense is a bill message sent by the person who fronted the money, and whoever has paid shows up as a ✓ in a row of initials, the way read receipts do in a messenger. The wallpaper is a cool grey, other people's messages are white bubbles, your own are solid ink, and the one thing that is about you right now, your number, is pinned in flat yellow above the thread.
+Ting Ting is the group's own chat thread, one that happens to keep the books. Every expense is a bill message in the group's thread, and whoever has paid shows up as a ✓ in a row of initials, the way read receipts do in a messenger. The wallpaper is a cool grey, other people's messages are white bubbles, your own are solid ink, and the one thing that is about you right now, your number, is pinned in flat yellow above the thread.
 
 The system is dense and operational, built for a thirty-second visit on a phone: one typeface with hierarchy carried by size and weight, tabular figures wherever money appears, lucide line icons, and color spent almost entirely on meaning (ink is you, yellow is your pin, brick red is still owed, leaf green is paid). Surfaces are flat tonal layers; the only depth is a hair of contact shadow under bubbles and the lift of a sheet.
 
@@ -359,12 +359,12 @@ Messenger-plain and thumb-sized: everything is a bubble, a pill or a row, and no
 - **Placeholder / Date:** placeholders in Timestamp Slate at full opacity; date inputs follow the active color scheme.
 
 ### Navigation
-- **Chat header:** Side-Panel Paper, 64px row. A stacked group avatar (the payer in ink and you in yellow, 26px each, overlapping in one corner), the group name at 17px semibold, and a 13px status line that leads with a live dot and the word for it ("Trực tiếp" in the neutral line, "Mất kết nối" in Unpaid Brick), then three icon buttons.
+- **Chat header:** Side-Panel Paper, 64px row. A stacked group avatar (the app's "TT" in ink and you in yellow, 26px each, overlapping in one corner), the group name at 17px semibold, and a 13px status line that leads with a live dot and the word for it ("Trực tiếp" in the neutral line, "Mất kết nối" in Unpaid Brick), then three icon buttons.
 - **Mobile tabs:** two equal columns, 44px, 15px semibold. Active is ink text over a 3px × 48px ink underline with rounded top; inactive is Timestamp Slate. A tabular count follows "Thành viên". Hidden from 1024px, where both columns show.
 - **Composer dock:** bottom edge, Side-Panel Paper with a hairline on top. The admin sees a 48px pill "Ghi khoản mới…" with an ink send disc; a member who owes sees a full-width primary Pay carrying the exact amount; everyone else sees an outline action.
 
 ### Bill Bubble
-The signature component. The payer's avatar sits beside other people's bubbles (kept invisible on follow-ups so they stay aligned), with a "Minh đã ứng" sender line on the first bubble of a day. Your own bills flip to the right in ink. Hover dims brightness to 97%.
+The signature component. Bills sit on the left with no sender avatar and no sender line: the app has no "payer" persona, so the bubble itself is the message. Hover dims brightness to 97%.
 
 **The Fixed Label Grid Rule.** Every bill bubble fills the same slots in the same order: category tile · title with category and split · total; a hairline; initials with ✓ badges · progress · time; then "Phần của bạn" when you take part. Add information by filling a slot, never by adding a new layout.
 
@@ -377,9 +377,9 @@ A flat Pinned-Note Yellow band under the header with a Pin Rule Gold bottom bord
 The status primitive. "Đã trả" is a Settled Mint pill with a check; "Chưa trả" is a transparent pill with a dashed 70% Unpaid Brick outline and a dashed-circle icon. The read-only form is 32px tall; the admin form is a 44px × 108px toggle button (`aria-pressed`) whose dashed outline turns solid on hover.
 
 ### Members Panel and Category Bars
-A group summary (one sentence, one paid/unpaid bar, a phase chip, a count line), then three groups of 64px member rows: avatar, name (with a yellow "bạn" tag for you), a count line, a small progress bar with "đã trả n%", and the amount on the right (owed in Unpaid Brick with a minus sign, the payer's receivable in Settled Leaf with a plus sign, settled members as a double check and "Xong"). Category spending is drawn as bars sorted by amount, all in Secondary Slate, each labelled directly with icon · name · count · amount · %.
+A group summary (one sentence, one paid/unpaid bar, a phase chip, a count line), then two groups of 64px member rows: avatar, name (with a yellow "bạn" tag for you), a count line, a small progress bar with "đã trả n%", and the amount on the right (owed in Unpaid Brick with a minus sign, settled members as a double check and "Xong"). Category spending is drawn as bars sorted by amount, all in Secondary Slate, each labelled directly with icon · name · count · amount · %.
 
-**The Ledger-Not-Leaderboard Rule.** Members are grouped by state (Còn nợ, Đã trả xong, Người ứng tiền). Còn nợ is sorted by amount owed, largest first, so the biggest collection is visible at once (the user's call, 15/9/2026); ties fall back to name. Never badge the biggest debtor, number the rows, or add medals and streaks.
+**The Ledger-Not-Leaderboard Rule.** Members are grouped by state (Còn nợ, Đã trả xong). Còn nợ is sorted by amount owed, largest first, so the biggest collection is visible at once (the user's call, 15/9/2026); ties fall back to name. Never badge the biggest debtor, number the rows, or add medals and streaks.
 
 ### Sheets and Motion
 **The One Overlay Rule.** Every detail opens in `SheetShell`: a bottom sheet on mobile, a 440px right side sheet at ≥1024px. `AlertDialog` is only for confirming a destructive or bulk action.

@@ -68,7 +68,7 @@ export default function QRCodeManager({ paymentQR, onUpdate, isAdmin }: QRCodeMa
           <div>
             <QrCode aria-hidden className="w-8 h-8 text-ink-3 mx-auto" />
             <p className="text-small text-ink-2 mt-2">
-              {isAdmin ? "Chưa có ảnh QR" : "Người ứng tiền chưa tải ảnh QR"}
+              {isAdmin ? "Chưa có ảnh QR" : "Chưatải ảnh QR"}
             </p>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function QRCodeManager({ paymentQR, onUpdate, isAdmin }: QRCodeMa
           </dl>
         ) : (
           <p className="text-body text-ink-2 text-center mt-5">
-            Người ứng tiền chưa thiết lập thông tin chuyển khoản.
+            Chưathiết lập thông tin chuyển khoản.
           </p>
         )}
       </div>

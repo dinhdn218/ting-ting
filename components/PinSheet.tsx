@@ -11,7 +11,7 @@ interface PinSheetProps {
   onClose: () => void;
   /** Trả về true nếu PIN đúng — luồng hash/nâng cấp vẫn nằm ở page.tsx */
   onSubmit: (pin: string) => Promise<boolean>;
-  /** Chưa có admin config → lần đầu, cần đặt tên người ứng tiền */
+  /** Chưa có admin config → lần đầu, cần đặt tên người giữ sổ */
   isFirstTime: boolean;
   adminName: string;
   onAdminNameChange: (value: string) => void;
@@ -123,7 +123,7 @@ export default function PinSheet({
       {isFirstTime && (
         <div className="border-t border-line pt-4 mb-5">
           <label htmlFor="admin-name" className="block text-small font-medium text-ink-2 mb-1.5">
-            Tên người ứng tiền
+            Tên người giữ sổ
           </label>
           <div className={field}>
             <input
