@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, Clock, Search, SendHorizontal, UserPlus, X } from "lucide-react";
+import { Check, ChevronDown, Clock, Search, SendHorizontal, UserPlus, Users, X } from "lucide-react";
 import type { Activity, ActivityCategory, Participant } from "@/types";
+import type { FrequentGroup } from "@/lib/ledgerSelectors";
 import { money, plain } from "@/lib/ledgerSelectors";
 import { cn, foldVi } from "@/lib/utils";
 import { btnPrimary, field } from "@/lib/styles";
@@ -21,7 +22,10 @@ interface QuickSplitWidgetProps {
   open: boolean;
   onClose: () => void;
   onAdd: (activity: Activity) => void;
+  /** Người trong sổ, ĐÃ xếp theo mức liên quan (hay đi cùng lên trước) */
   existingParticipants: string[];
+  /** Các nhóm người đi cùng nhau lặp lại — chip chọn cả nhóm một chạm */
+  frequentGroups?: FrequentGroup[];
   /** Nội dung các khoản đã ghi — gợi ý khi gõ, chọn thì điền sẵn danh mục */
   pastTitles: PastTitle[];
   /** Người gửi tin trong bản xem trước. Không tự thêm vào danh sách chia. */
@@ -69,6 +73,7 @@ export default function QuickSplitWidget({
   onClose,
   onAdd,
   existingParticipants,
+  frequentGroups = [],
   pastTitles,
   payerName,
 }: QuickSplitWidgetProps) {
@@ -81,6 +86,7 @@ export default function QuickSplitWidget({
   const [shares, setShares] = useState<Record<string, string>>({});
   const [query, setQuery] = useState("");
   const [extra, setExtra] = useState<string[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
   const roster = useMemo(() => {
     const seen = new Set<string>();
@@ -105,6 +111,16 @@ export default function QuickSplitWidget({
   const q = foldVi(query.trim());
   const shown = q ? roster.filter((n) => foldVi(n).includes(q)) : roster;
   const exact = !!q && roster.some((n) => foldVi(n) === q);
+
+  /**
+   * Sổ 37 người mà một khoản chỉ 3–6 người: bày hết là bắt cuộn vô ích.
+   * Cắt còn 8 người liên quan nhất; đang tìm hoặc đã bấm "xem tất cả" thì
+   * hiện đủ. Người đã tick luôn thấy ở hàng chip phía trên nên không lạc.
+   */
+  const CUT = 8;
+  const collapsed = !q && !showAll && shown.length > CUT;
+  const visible = collapsed ? shown.slice(0, CUT) : shown;
+  const hiddenCount = shown.length - visible.length;
 
   /** Phần tiền của từng người theo chế độ đang chọn. */
   const shareFor = (name: string): number => {
@@ -380,6 +396,32 @@ export default function QuickSplitWidget({
             </div>
           )}
 
+          {/* Nhóm hay đi cùng — một chạm chọn cả nhóm, đỡ tick từng người */}
+          {frequentGroups.length > 0 && picked.length === 0 && (
+            <div className="mt-3">
+              <p className="text-small text-ink-3 mb-1.5">Nhóm hay đi cùng</p>
+              <div className="flex flex-wrap gap-1.5">
+                {frequentGroups.map((g) => (
+                  <button
+                    key={g.names.join(" ")}
+                    type="button"
+                    onClick={() => setPicked(g.names)}
+                    className="inline-flex items-center gap-1.5 min-h-9 px-3 rounded-full
+                               border border-line bg-bubble text-small text-ink-2
+                               hover:border-line-strong hover:text-ink transition-colors"
+                  >
+                    <Users aria-hidden className="w-3.5 h-3.5 shrink-0 text-ink-3" />
+                    <span className="truncate max-w-45">
+                      {g.names.slice(0, 2).join(", ")}
+                      {g.names.length > 2 && ` +${g.names.length - 2}`}
+                    </span>
+                    <span className="tnum text-meta text-ink-3">· {g.names.length}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Tìm hoặc thêm người */}
           <div className={cn(field, "mt-3 py-2 flex items-center gap-2")}>
             <Search aria-hidden className="w-4 h-4 text-ink-3 shrink-0" />
@@ -422,7 +464,7 @@ export default function QuickSplitWidget({
                 </button>
               </li>
             )}
-            {shown.map((name) => {
+            {visible.map((name) => {
               const on = picked.includes(name);
               return (
                 <li
@@ -481,6 +523,18 @@ export default function QuickSplitWidget({
               );
             })}
           </ul>
+          {collapsed && (
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="w-full min-h-11 flex items-center justify-center gap-1.5
+                         text-small font-semibold text-ink-2 hover:text-ink transition-colors"
+            >
+              <ChevronDown aria-hidden className="w-4 h-4" />
+              Xem tất cả {shown.length} người
+              <span className="tnum font-normal text-ink-3">· còn {hiddenCount}</span>
+            </button>
+          )}
           {q && shown.length === 0 && exact === false && (
             <p className="text-small text-ink-3 mt-2">Chưa có ai tên này trong sổ — Enter để thêm.</p>
           )}

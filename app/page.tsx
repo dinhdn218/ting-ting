@@ -7,11 +7,18 @@ import * as firebaseService from "@/lib/firebaseService";
 import { hashPin, verifyPin } from "@/lib/securityUtils";
 import { getMe, setMe as persistMe } from "@/lib/identity";
 import {
+  clearAdminSession,
+  getAdminSession,
+  saveAdminSession,
+} from "@/lib/adminSession";
+import {
   EMPTY_FILTER,
   buildLedger,
   filterActivities,
+  frequentGroups,
   hasFilter,
   localMonthKey,
+  rosterByRelevance,
   threadMonths,
   type ActivityFilter,
 } from "@/lib/ledgerSelectors";
@@ -74,6 +81,14 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMeState(getMe());
     setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+
+    // Phiên quản trị còn hạn trên máy này → khỏi nhập PIN lại.
+    // getAdminSession() tự dọn phiên hết hạn, ở đây chỉ cần hỏi còn hay không.
+    const session = getAdminSession();
+    if (session) {
+      setIsAdmin(true);
+      setAdminName(session.name);
+    }
   }, []);
 
   // Trạng thái kết nối — hiện ở dòng phụ của header
@@ -131,11 +146,10 @@ export default function Home() {
   const shownSum = useMemo(() => filtered.reduce((s, a) => s + a.totalAmount, 0), [filtered]);
   const nowKey = useMemo(() => localMonthKey(new Date()), []);
 
-  const roster = useMemo(() => {
-    const s = new Set<string>();
-    activities.forEach((a) => a.participants.forEach((p) => s.add(p.name)));
-    return Array.from(s).sort();
-  }, [activities]);
+  // Khi ghi khoản mới: người hay đi cùng lên trước, không theo bảng chữ cái —
+  // một khoản chỉ 3–6 người trong sổ mấy chục người.
+  const splitRoster = useMemo(() => rosterByRelevance(activities), [activities]);
+  const splitGroups = useMemo(() => frequentGroups(activities), [activities]);
 
   // Gợi ý "Nội dung" khi ghi khoản: nội dung đã dùng, mới nhất trước
   const pastTitles = useMemo(() => {
@@ -259,6 +273,7 @@ export default function Home() {
         setAdminConfig(newConfig);
         setIsAdmin(true);
         setAdminName(newConfig.name);
+        saveAdminSession(newConfig.name);
         setSheet(null);
         toast.success("Sổ đã sẵn sàng — đã vào chế độ quản trị");
         return true;
@@ -283,12 +298,15 @@ export default function Home() {
     if (isValid) {
       setIsAdmin(true);
       setAdminName(adminConfig.name);
+      // Chỉ lưu SAU khi PIN đã đúng — và chỉ lưu tên + hạn, không lưu PIN.
+      saveAdminSession(adminConfig.name);
       setSheet(null);
     }
     return isValid;
   };
 
   const handleLogout = () => {
+    clearAdminSession();
     setIsAdmin(false);
     toast.success("Đã thoát quản trị");
   };
@@ -478,7 +496,8 @@ export default function Home() {
         open={sheet?.kind === "split"}
         onClose={() => setSheet(null)}
         onAdd={addActivity}
-        existingParticipants={roster}
+        existingParticipants={splitRoster}
+        frequentGroups={splitGroups}
         pastTitles={pastTitles}
         payerName={payerName}
       />

@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckCheck, CircleDashed } from "lucide-react";
+import { useState } from "react";
+import { CheckCheck, ChevronDown, CircleDashed } from "lucide-react";
 import type { Ledger, PersonRow, GroupPhase } from "@/lib/ledgerSelectors";
 import { PHASE_LABELS, money } from "@/lib/ledgerSelectors";
 import { cn } from "@/lib/utils";
@@ -123,36 +124,38 @@ export default function MembersPanel({
         </p>
       </section>
 
-      {/* Còn nợ */}
-      <section aria-labelledby="debt-h">
-        <h3 id="debt-h" className="text-row font-semibold">
-          Còn nợ <span className="text-ink-3 font-normal tnum">· {debtors.length}</span>
-        </h3>
-        {isAdmin && debtors.length > 0 && (
-          <p className="text-small text-ink-3 mt-0.5">Chạm vào tên để tick từng khoản.</p>
-        )}
-        {debtors.length === 0 ? (
+      {/* Còn nợ — thu gọn mặc định, mở ra mới xem từng người */}
+      {debtors.length === 0 ? (
+        <section aria-labelledby="debt-h">
+          <h3 id="debt-h" className="text-row font-semibold">
+            Còn nợ <span className="text-ink-3 font-normal tnum">· 0</span>
+          </h3>
           <p className="text-body text-ink-2 mt-2">Không ai còn nợ — sổ đã sạch.</p>
-        ) : (
-          <ul className="mt-1">
-            {debtors.map((r) => (
-              <MemberRow key={r.name} row={r} onOpen={onOpenPerson} />
-            ))}
-          </ul>
-        )}
-      </section>
+        </section>
+      ) : (
+        <CollapsibleGroup
+          id="debt"
+          title="Còn nợ"
+          rows={debtors}
+          summary={<Money value={ledger.outstanding} direction="out" className="text-row font-semibold text-owe" />}
+          hint={isAdmin ? "Chạm vào tên để tick từng khoản." : undefined}
+          onOpenPerson={onOpenPerson}
+        />
+      )}
 
       {settled.length > 0 && (
-        <section aria-labelledby="settled-h">
-          <h3 id="settled-h" className="text-row font-semibold">
-            Đã trả xong <span className="text-ink-3 font-normal tnum">· {settled.length}</span>
-          </h3>
-          <ul className="mt-1">
-            {settled.map((r) => (
-              <MemberRow key={r.name} row={r} onOpen={onOpenPerson} />
-            ))}
-          </ul>
-        </section>
+        <CollapsibleGroup
+          id="settled"
+          title="Đã trả xong"
+          rows={settled}
+          summary={
+            <span className="inline-flex items-center gap-1 text-small font-semibold text-paid">
+              <CheckCheck aria-hidden className="w-4 h-4" />
+              Xong
+            </span>
+          }
+          onOpenPerson={onOpenPerson}
+        />
       )}
 
       {payer && (
@@ -176,6 +179,91 @@ export default function MembersPanel({
   );
 }
 
+/**
+ * Nhóm người thu gọn mặc định: dài 9–20 người thì cuộn mãi không hết,
+ * nên đóng lại và chỉ mở khi cần xem từng người. Header đã nói đủ:
+ * bao nhiêu người, mặt ai, tổng bao nhiêu.
+ */
+function CollapsibleGroup({
+  id,
+  title,
+  rows,
+  summary,
+  hint,
+  onOpenPerson,
+}: {
+  id: string;
+  title: string;
+  rows: PersonRow[];
+  summary: React.ReactNode;
+  hint?: string;
+  onOpenPerson: (name: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const faces = rows.slice(0, 4);
+  const rest = rows.length - faces.length;
+
+  return (
+    <section aria-labelledby={`${id}-h`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={`${id}-list`}
+        className="w-full text-left grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3
+                   -mx-2 px-2 py-2 rounded-ctl transition-colors hover:bg-wall-2/60"
+      >
+        <span className="min-w-0">
+          <span id={`${id}-h`} className="flex items-center gap-1.5 text-row font-semibold">
+            {title}
+            <span className="text-ink-3 font-normal tnum">· {rows.length}</span>
+            <ChevronDown
+              aria-hidden
+              className={cn(
+                "w-4 h-4 text-ink-3 transition-transform duration-200",
+                open && "rotate-180",
+              )}
+            />
+          </span>
+          {!open && (
+            <span className="mt-1.5 flex items-center">
+              {faces.map((r) => (
+                <Avatar
+                  key={r.name}
+                  name={r.name}
+                  size="xs"
+                  tone={r.isMe ? "me" : "default"}
+                  className="-ml-1.5 first:ml-0 ring-2 ring-wall"
+                />
+              ))}
+              {rest > 0 && (
+                <span className="ml-1.5 text-meta text-ink-3 tnum">+{rest}</span>
+              )}
+            </span>
+          )}
+        </span>
+        <span className="text-right">{summary}</span>
+      </button>
+
+      {open && (
+        <>
+          {hint && <p className="text-small text-ink-3 mt-0.5">{hint}</p>}
+          <ul id={`${id}-list`} className="mt-1">
+            {rows.map((r) => (
+              <MemberRow key={r.name} row={r} onOpen={onOpenPerson} />
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
+  );
+}
+
+/**
+ * Hai dòng: tên được nguyên chỗ của nó (tên người là thứ phải đọc được,
+ * không bao giờ cắt cụt), số khoản xuống dòng dưới. Tiến độ là vệt màu
+ * bên trái thay cho thanh riêng — không tốn thêm chiều cao.
+ */
 function MemberRow({ row, onOpen }: { row: PersonRow; onOpen: (name: string) => void }) {
   const pct = row.shareTotal > 0 ? Math.round((row.sharePaid / row.shareTotal) * 100) : 0;
   const showProgress = !row.isPayer && !row.settled && row.shareTotal > 0;
@@ -183,7 +271,7 @@ function MemberRow({ row, onOpen }: { row: PersonRow; onOpen: (name: string) => 
   const sub = row.isPayer
     ? "Giữ sổ · còn phải thu"
     : row.settled
-      ? `${row.totalCount}/${row.totalCount} khoản · ${money(row.shareTotal)}`
+      ? `${row.totalCount} khoản · ${money(row.shareTotal)}`
       : `${row.unpaidCount} khoản chưa trả`;
 
   return (
@@ -192,42 +280,51 @@ function MemberRow({ row, onOpen }: { row: PersonRow; onOpen: (name: string) => 
         type="button"
         onClick={() => onOpen(row.name)}
         className="w-full text-left grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3
-                   py-3 min-h-16 border-b border-line transition-colors hover:bg-wall-2/60
+                   py-2.5 min-h-14 border-b border-line transition-colors hover:bg-wall-2/60
                    -mx-2 px-2 rounded-ctl"
       >
-        <Avatar name={row.name} tone={row.isMe ? "me" : row.isPayer ? "payer" : "default"} />
+        <span className="relative flex items-center">
+          {showProgress && (
+            <span
+              aria-hidden
+              className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-0.75 h-7 rounded-full bg-wall-2 overflow-hidden"
+            >
+              <span
+                className="absolute bottom-0 inset-x-0 rounded-full bg-paid"
+                style={{ height: `${pct}%` }}
+              />
+            </span>
+          )}
+          <Avatar
+            name={row.name}
+            size="sm"
+            tone={row.isMe ? "me" : row.isPayer ? "payer" : "default"}
+          />
+        </span>
         <span className="min-w-0">
-          <span className="flex items-center gap-1.5 text-row font-medium">
-            <span className="truncate">{row.name}</span>
+          <span className="flex items-center gap-1.5 text-body font-medium">
+            <span className="min-w-0 wrap-break-word">{row.name}</span>
             {row.isMe && (
               <span className="shrink-0 px-1.5 rounded-full bg-pin text-on-pin text-meta font-semibold">
                 bạn
               </span>
             )}
           </span>
-          <span className="block text-small text-ink-3 tnum mt-0.5">{sub}</span>
-          {showProgress && (
-            <span className="mt-1.5 flex items-center gap-2 max-w-[240px]">
-              <span aria-hidden className="flex-1 flex gap-[2px] h-1">
-                {pct > 0 && (
-                  <span className="block h-full rounded-l-full bg-paid" style={{ width: `${pct}%` }} />
-                )}
-                <span className="block h-full flex-1 rounded-r-full bg-wall-2" />
-              </span>
-              <span className="shrink-0 text-meta text-ink-3 tnum">đã trả {pct}%</span>
-            </span>
-          )}
+          <span className="block text-meta text-ink-3 tnum mt-0.5">{sub}</span>
         </span>
-        <span className="text-right min-w-[7.5rem]">
+        <span className="text-right">
           {row.isPayer ? (
-            <Money value={row.owed} direction="in" className="text-row font-semibold text-paid" />
+            <Money value={row.owed} direction="in" className="text-body font-semibold text-paid" />
           ) : row.settled ? (
             <span className="inline-flex items-center gap-1 text-small font-semibold text-paid">
               <CheckCheck aria-hidden className="w-4 h-4" />
               Xong
             </span>
           ) : (
-            <Money value={row.owed} direction="out" className="text-row font-semibold text-owe" />
+            <>
+              <Money value={row.owed} direction="out" className="block text-body font-semibold text-owe" />
+              <span className="block text-meta text-ink-3 tnum mt-0.5">đã trả {pct}%</span>
+            </>
           )}
         </span>
       </button>
